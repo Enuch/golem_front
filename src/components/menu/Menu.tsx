@@ -102,7 +102,7 @@ export const Menu = () => {
             <ul className="menu-inner py-1">
                 <li className="menu-item">
                     <Link
-                        to={`/home`}
+                        to={`/`}
                         className="menu-link"
                     >
                         <i className="menu-icon tf-icons bx bx-home-circle"></i>
@@ -171,10 +171,10 @@ export const Menu = () => {
                 </li>
 
                 <li className="menu-item">
-                    <a href="/" className="menu-link">
+                    <Link to={`/login`} className="menu-link">
                         <i className="menu-icon tf-icons bx bx-log-out"></i>
                         <div data-i18n="Tables">Sair</div>
-                    </a>
+                    </Link>
                 </li>
             </ul>
         </aside>
