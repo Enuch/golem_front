@@ -133,13 +133,13 @@ export const Menu = () => {
                     </Link>
                 </li>
                 <li className="menu-item">
-                    <a
-                        href="/"
+                    <Link
+                        to={`/material`}
                         className="menu-link"
                     >
                         <i className="menu-icon tf-icons bx bx-package"></i>
                         <div data-i18n="Authentications">Materiais</div>
-                    </a>
+                    </Link>
                 </li>
 
                 <li className="menu-header small text-uppercase">

@@ -4,6 +4,7 @@ import {
 import { Category } from "../pages/category/Category";
 import { Home } from "../pages/home/Home";
 import { Login } from "../pages/login/Login";
+import { Material } from "../pages/material/Material";
 
 export const router = createBrowserRouter([
   {
@@ -18,7 +19,10 @@ export const router = createBrowserRouter([
         path: "/category",
         element: <Category />,
       },
+      {
+        path: "/material",
+        element: <Material />,
+      },
     ]
   },
-
 ]);

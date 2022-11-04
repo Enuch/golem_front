@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
-import { TMaterial } from "../../types/TMaterial";
+import { TCategory } from "../../types/TCategory";
 import { CategoryController } from "./Category.controller";
 import * as Yup from 'yup'
 import { Filter } from "../../components/filter/Filter";
@@ -18,24 +18,24 @@ export const Category = () => {
         }),
 
         onSubmit: (values) => {
-            alert("Material cadastrado com sucesso!");
-            createM(values);
+            alert("Categoria cadastrado com sucesso!");
+            createC(values);
         },
     });
 
-    const [categories, setcategories] = useState<TMaterial[]>([]);
+    const [categories, setcategories] = useState<TCategory[]>([]);
     const [refresh, setRefresh] = useState<number>(0)
 
     useEffect(() => {
         controller.findAll(setcategories);
     }, [refresh]);
 
-    const createM = async (data: Object) => {
+    const createC = async (data: Object) => {
         await controller.create(data);
         setRefresh(refresh + 1)
     };
 
-    const deleteM = async (id: number) => {
+    const deleteC = async (id: number) => {
         await controller.delete(id)
         setRefresh(refresh + 1)
     }
@@ -49,7 +49,7 @@ export const Category = () => {
     })
 
     // paginação
-    const [itensPerPage, setItensPerPage] = useState(5)
+    const [itensPerPage] = useState(5)
     const [currentPage, setCurrentPage] = useState(0)
 
     const pages = Math.ceil(categoriesFiltered.length / itensPerPage)
@@ -74,7 +74,7 @@ export const Category = () => {
                 previuosPage = currentPage + 1
             }
         }
-    }, [currentPage, pages])
+    }, [currentPage, flag, pages])
 
     return (
         <>
@@ -252,7 +252,7 @@ export const Category = () => {
                                         <td>{item.name}</td>
                                         <td>
                                             <p>
-                                                <i onClick={() => { deleteM(item.id) }}
+                                                <i onClick={() => { deleteC(item.id) }}
                                                     className="fa-solid fa-trash"
                                                     style={{ cursor: "pointer" }}
                                                 ></i>
