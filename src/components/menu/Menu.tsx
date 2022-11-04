@@ -114,10 +114,10 @@ export const Menu = () => {
                     <span className="menu-header-text">Contas</span>
                 </li>
                 <li className="menu-item">
-                    <a href="/" className="menu-link">
+                    <Link to={`/user`} className="menu-link">
                         <i className="menu-icon tf-icons bx bx-user"></i>
                         <div data-i18n="Layouts">Usuários</div>
-                    </a>
+                    </Link>
                 </li>
 
                 <li className="menu-header small text-uppercase">

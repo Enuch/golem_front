@@ -5,6 +5,7 @@ import { Category } from "../pages/category/Category";
 import { Home } from "../pages/home/Home";
 import { Login } from "../pages/login/Login";
 import { Material } from "../pages/material/Material";
+import { User } from "../pages/user/User";
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
       {
         path: "/material",
         element: <Material />,
+      },
+      {
+        path: "/user",
+        element: <User />,
       },
     ]
   },
