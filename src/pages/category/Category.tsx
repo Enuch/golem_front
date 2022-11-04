@@ -1,4 +1,42 @@
+import { useFormik } from "formik";
+import { useEffect, useState } from "react";
+import { TMaterial } from "../../types/TMaterial";
+import { CategoryController } from "./Category.controller";
+import * as Yup from 'yup'
+
 export const Category = () => {
+    const controller = CategoryController();
+    const formik = useFormik({
+        initialValues: {
+            name: "",
+        },
+        validationSchema: Yup.object({
+            name: Yup.string().required("O nome é obrigatório!")
+        }),
+
+        onSubmit: (values) => {
+            alert("Material cadastrado com sucesso!");
+            createM(values);
+        },
+    });
+
+    const [materials, setMaterials] = useState<TMaterial[]>([]);
+    const [refresh, setRefresh] = useState<number>(0)
+
+    useEffect(() => {
+        controller.findAll(setMaterials);
+    }, [refresh]);
+
+    const createM = async (data: Object) => {
+        await controller.create(data);
+        setRefresh(refresh + 1)
+    };
+
+    const deleteM = async (id: number) => {
+        await controller.delete(id)
+        setRefresh(refresh + 1)
+    }
+
     return (
         <>
             {/*Titulo*/}
@@ -38,19 +76,26 @@ export const Category = () => {
                                         aria-label="Close"
                                     ></button>
                                 </div>
-                                <form>
+                                <form onSubmit={formik.handleSubmit}>
                                     <div className="modal-body">
                                         <div className="row">
                                             <div className="col mb-3">
-                                                <label htmlFor="nameBasic" className="form-label">
+                                                <label htmlFor="name" className="form-label">
                                                     Nome
                                                 </label>
                                                 <input
                                                     type="text"
-                                                    id="nameBasic"
+                                                    id="name"
+                                                    name="name"
                                                     className="form-control"
                                                     placeholder="Enter Name"
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    value={formik.values.name || ""}
                                                 />
+                                                {formik.touched.name && formik.errors.name ? (
+                                                    <div>{formik.errors.name}</div>
+                                                ) : null}
                                             </div>
                                         </div>
                                     </div>
@@ -63,7 +108,7 @@ export const Category = () => {
                                             Cancelar
                                         </button>
                                         <button
-                                            data-bs-dismiss="modal"
+                                            data-bs-dismiss={formik.touched.name && formik.errors.name ? null : "modal"}
                                             aria-label="Close"
                                             type="submit"
                                             className="btn btn-primary"
@@ -100,19 +145,26 @@ export const Category = () => {
                                         aria-label="Close"
                                     ></button>
                                 </div>
-                                <form>
+                                <form onSubmit={formik.handleSubmit}>
                                     <div className="modal-body">
                                         <div className="row">
                                             <div className="col mb-3">
-                                                <label htmlFor="nameBasic" className="form-label">
+                                                <label htmlFor="name" className="form-label">
                                                     Nome
                                                 </label>
                                                 <input
                                                     type="text"
-                                                    id="nameBasic"
+                                                    id="name"
+                                                    name="name"
                                                     className="form-control"
                                                     placeholder="Enter Name"
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    value={formik.values.name || ""}
                                                 />
+                                                {formik.touched.name && formik.errors.name ? (
+                                                    <div>{formik.errors.name}</div>
+                                                ) : null}
                                             </div>
                                         </div>
                                     </div>
@@ -125,12 +177,12 @@ export const Category = () => {
                                             Cancelar
                                         </button>
                                         <button
-                                            data-bs-dismiss="modal"
+                                            data-bs-dismiss={formik.touched.name && formik.errors.name ? null : "modal"}
                                             aria-label="Close"
                                             type="submit"
                                             className="btn btn-primary"
                                         >
-                                            Editar
+                                            Adicionar
                                         </button>
                                     </div>
                                 </form>
@@ -154,21 +206,19 @@ export const Category = () => {
                                 <th>ações</th>
                             </tr>
                         </thead>
-                        {/* <tbody>
-                            {currentItens.map((item) => {
+                        <tbody>
+                            {materials.map((item) => {
                                 return (
                                     <tr key={item.id.toString()}>
                                         <td>{item.name}</td>
                                         <td>
                                             <p>
-                                                <i
-                                                    onClick={() => handleDelete(item.id)}
+                                                <i onClick={() => { deleteM(item.id) }}
                                                     className="fa-solid fa-trash"
                                                     style={{ cursor: "pointer" }}
                                                 ></i>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <i
-                                                    onClick={() => handleSetIdName(item.id, item.name)}
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#basicModalUp"
                                                     className="fa-solid fa-pen-to-square"
@@ -179,7 +229,7 @@ export const Category = () => {
                                     </tr>
                                 );
                             })}
-                        </tbody> */}
+                        </tbody>
                     </table>
                 </div>
             </div>
