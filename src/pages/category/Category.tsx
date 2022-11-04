@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { TMaterial } from "../../types/TMaterial";
 import { CategoryController } from "./Category.controller";
 import * as Yup from 'yup'
+import { Filter } from "../../components/filter/Filter";
+
+let previuosPage = 0
 
 export const Category = () => {
     const controller = CategoryController();
@@ -20,11 +23,11 @@ export const Category = () => {
         },
     });
 
-    const [materials, setMaterials] = useState<TMaterial[]>([]);
+    const [categories, setcategories] = useState<TMaterial[]>([]);
     const [refresh, setRefresh] = useState<number>(0)
 
     useEffect(() => {
-        controller.findAll(setMaterials);
+        controller.findAll(setcategories);
     }, [refresh]);
 
     const createM = async (data: Object) => {
@@ -36,6 +39,42 @@ export const Category = () => {
         await controller.delete(id)
         setRefresh(refresh + 1)
     }
+
+    // filtro
+    const [filtro, setFiltro] = useState('')
+
+    const lowerCase = filtro?.toLocaleLowerCase()
+    const categoriesFiltered = categories.filter(category => {
+        return category.name.toLowerCase().includes(lowerCase)
+    })
+
+    // paginação
+    const [itensPerPage, setItensPerPage] = useState(5)
+    const [currentPage, setCurrentPage] = useState(0)
+
+    const pages = Math.ceil(categoriesFiltered.length / itensPerPage)
+    const startIndex = currentPage * itensPerPage;
+    const endIndex = startIndex + itensPerPage;
+    const currentItens = categoriesFiltered.slice(startIndex, endIndex)
+
+    const [flag, setFlag] = useState(0)
+    let red = 0
+
+    useEffect(() => {
+        if (previuosPage - 1 > currentPage) {
+            if (currentPage === 0) { setFlag(flag) }
+            else {
+                setFlag(flag - 1)
+                previuosPage = currentPage - 1
+            }
+        } else if (previuosPage + 1 < currentPage) {
+            if (currentPage === pages - 1) { setFlag(flag) }
+            else {
+                setFlag(flag + 1)
+                previuosPage = currentPage + 1
+            }
+        }
+    }, [currentPage, pages])
 
     return (
         <>
@@ -193,7 +232,7 @@ export const Category = () => {
             </div>
 
             {/* Busca */}
-            {/* <Search filtro={filtro} fun={setFiltro} /> */}
+            <Filter filtro={filtro} fun={setFiltro} />
 
             {/* Lista */}
             <div className="card" style={{ marginBottom: "20px", marginTop: "20px" }}>
@@ -207,7 +246,7 @@ export const Category = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {materials.map((item) => {
+                            {currentItens.map((item) => {
                                 return (
                                     <tr key={item.id.toString()}>
                                         <td>{item.name}</td>
@@ -235,30 +274,31 @@ export const Category = () => {
             </div>
 
             {/* PAGINAÇÃO */}
-            {/* <nav aria-label="Page navigation">
-              <ul className="pagination justify-content-center">
-                <li value={0} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item first">
-                  <a className="page-link" href="javascript:void(0);"><i className="tf-icon bx bx-chevrons-left"></i></a>
-                </li>
-                <li value={(currentPage < 1) ? currentPage : currentPage - 1} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item prev">
-                  <a className="page-link" href="javascript:void(0);"><i className="tf-icon bx bx-chevron-left"></i></a>
-                </li>
-                {Array.from(Array(pages), (item, index) => {
-                  if (red > 2) return
-                  red++
-                  return <li key={index} value={index + flag} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item">
-                    <a className="page-link" href="javascript:void(0);">{index + flag}</a>
-                  </li>
-                })}
+            <nav aria-label="Page navigation">
+                <ul className="pagination justify-content-center">
+                    <li value={0} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item first">
+                        <p style={{ cursor: "pointer" }} className="page-link"><i className="tf-icon bx bx-chevrons-left"></i></p>
+                    </li>
+                    <li value={(currentPage < 1) ? currentPage : currentPage - 1} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item prev">
+                        <p style={{ cursor: "pointer" }} className="page-link"><i className="tf-icon bx bx-chevron-left"></i></p>
+                    </li>
+                    {Array.from(Array(pages), (item, index) => {
+                        if (red > 2) return red++
+                        return (
+                            <li key={index} value={index + flag} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item">
+                                <p style={{ cursor: "pointer" }} className="page-link">{index + flag}</p>
+                            </li>
+                        )
+                    })}
 
-                <li value={(currentPage > pages - 2) ? currentPage : currentPage + 1} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item next">
-                  <a className="page-link" href="javascript:void(0);"><i className="tf-icon bx bx-chevron-right"></i></a>
-                </li>
-                <li value={pages - 1} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item last">
-                  <a className="page-link" href="javascript:void(0);"><i className="tf-icon bx bx-chevrons-right"></i></a>
-                </li>
-              </ul>
-            </nav>*/}
+                    <li value={(currentPage > pages - 2) ? currentPage : currentPage + 1} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item next">
+                        <p style={{ cursor: "pointer" }} className="page-link"><i className="tf-icon bx bx-chevron-right"></i></p>
+                    </li>
+                    <li value={pages - 1} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item last">
+                        <p style={{ cursor: "pointer" }} className="page-link"><i className="tf-icon bx bx-chevrons-right"></i></p>
+                    </li>
+                </ul>
+            </nav>
         </>
     );
 };
