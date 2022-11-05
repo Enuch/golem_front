@@ -147,23 +147,13 @@ export const Menu = () => {
                 </li>
 
                 <li className="menu-item">
-                    <a
-                        href="/"
+                    <Link
+                        to={`/request`}
                         className="menu-link"
                     >
                         <i className="menu-icon tf-icons bx bx-alarm-exclamation"></i>
                         <div data-i18n="Basic">Requisições</div>
-                    </a>
-                </li>
-
-                <li className="menu-item">
-                    <a
-                        href="/"
-                        className="menu-link"
-                    >
-                        <i className="menu-icon tf-icons bx bx-send"></i>
-                        <div data-i18n="Basic">Responder requisições</div>
-                    </a>
+                    </Link>
                 </li>
 
                 <li className="menu-header small text-uppercase">
