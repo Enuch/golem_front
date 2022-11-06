@@ -16,8 +16,8 @@ export const Material = () => {
         initialValues: {
             name: "",
             origin: "",
-            amount: 0,
-            category_id: 0,
+            amount: 1,
+            category_id: 1,
         },
         validationSchema: Yup.object({
             name: Yup.string().required("obrigatório!"),
@@ -27,6 +27,7 @@ export const Material = () => {
         }),
 
         onSubmit: (values) => {
+            console.log(values)
             values.category_id = Number.parseInt(values.category_id.toString())
             createM(values);
             alert("Material cadastrado com sucesso!");
@@ -221,6 +222,7 @@ export const Material = () => {
                                                         onBlur={formik.handleBlur}
                                                         value={formik.values.category_id}
                                                     >
+                                                        <option value={0}>Selecione uma categoria</option>
                                                         {categories.map((category) => {
                                                             return (
                                                                 <option key={category.id} value={category.id}>

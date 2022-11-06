@@ -102,7 +102,7 @@ export const Request = () => {
                                 className="form-select"
                                 aria-label="Default select example"
                             >
-                                <option selected value={0}>
+                                <option value={0}>
                                     Selecione um estatus
                                 </option>
                                 <option value={1}>Em análise</option>
@@ -150,8 +150,8 @@ export const Request = () => {
                                                         className="dropdown-menu dropdown-menu-end"
                                                         aria-labelledby="cardOpt3"
                                                     >
-                                                        <Link className="dropdown-item" to={`/`}>
-                                                            View More
+                                                        <Link className="dropdown-item" to={`/details`}>
+                                                            Detalhes
                                                         </Link>
                                                     </div>
                                                 </div>

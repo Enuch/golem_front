@@ -80,6 +80,7 @@ export const FormRequest = () => {
                                                                     className="form-select"
                                                                     aria-label="Default select example"
                                                                 >
+                                                                    <option value={0}>Selecione um material</option>
                                                                     {materials.map((item) => {
                                                                         return (
                                                                             <option key={item.id} value={item.id}>
