@@ -52,6 +52,7 @@ export const Material = () => {
         setRefresh(refresh + 1);
     }
 
+    // FILTRO
     const [filtro, setFiltro] = useState('')
 
     const lowerCase = filtro?.toLocaleLowerCase()

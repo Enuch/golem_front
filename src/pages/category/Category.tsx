@@ -19,6 +19,7 @@ export const Category = () => {
 
         onSubmit: (values) => {
             alert("Categoria cadastrado com sucesso!");
+            console.log(values)
             createC(values);
         },
     });

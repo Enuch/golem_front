@@ -9,22 +9,24 @@ export const Request = () => {
     const controller = RequestController();
 
     const [requests, setRequests] = useState<TRequest[]>([]);
-    const [refresh, setRefresh] = useState<number>(0);
+    const [refresh] = useState<number>(0);
 
     useEffect(() => {
         controller.findAll(setRequests);
     }, [refresh]);
 
-    function setStatus(status: Number) {
+    const setStatus = (status: Number): string => {
         if (status === 1) return "Em análise";
         else if (status === 2) return "Enviado";
         else if (status === 3) return "Cancelado";
+        return '';
     }
 
-    function setBadgeStatus(status: Number) {
+    const setBadgeStatus = (status: Number): string => {
         if (status === 1) return "badge bg-label-secondary";
         else if (status === 2) return "badge bg-label-success";
         else if (status === 3) return "badge bg-label-danger";
+        return '';
     }
 
     // FILTRO
@@ -75,176 +77,16 @@ export const Request = () => {
             {/*Botão Modal*/}
             <div style={{ marginBottom: "20px" }} className="col-lg-4 col-md-6">
                 <div className="mt-3">
-                    <button
-                        type="button"
-                        className="btn btn-primary"
-                        data-bs-toggle="modal"
-                        data-bs-target="#basicModal"
-                    >
-                        Nova Requisição
-                    </button>
-
-                    {/*Modal Create*/}
-                    <div
-                        className="modal fade"
-                        id="basicModal"
-                        tabIndex={-1}
-                        aria-hidden="true"
-                    >
-                        <div className="modal-dialog" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="exampleModalLabel1">
-                                        Cadastrar Requisição
-                                    </h5>
-                                    <button
-                                        type="button"
-                                        className="btn-close"
-                                        data-bs-dismiss="modal"
-                                        aria-label="Close"
-                                    ></button>
-                                </div>
-                                <form>
-                                    <div className="modal-body">
-                                        <div className="row">
-                                            <div className="col mb-3">
-                                                <label htmlFor="nameBasic" className="form-label">
-                                                    Material
-                                                </label>
-                                                {/* <Autocomplete
-                                                    options={materialsOpt}
-                                                    sx={{ width: 200 }}
-                                                    renderInput={(params) => <TextField {...params} />}
-                                                    value={materialOpt}
-                                                    onChange={(
-                                                        e: any,
-                                                        newValue: TMaterialOpt | undefined
-                                                    ) => setMaterialOpt(newValue)}
-                                                /> */}
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col mb-3">
-                                                <label
-                                                    htmlFor="defaultFormControlInput"
-                                                    className="form-label"
-                                                >
-                                                    Quantidade
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="defaultFormControlInput"
-                                                    placeholder="1"
-                                                    aria-describedby="defaultFormControlHelp"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button
-                                            type="button"
-                                            className="btn btn-outline-secondary"
-                                            data-bs-dismiss="modal"
-                                        >
-                                            Cancelar
-                                        </button>
-                                        <button
-                                            data-bs-dismiss="modal"
-                                            aria-label="Close"
-                                            type="submit"
-                                            className="btn btn-primary"
-                                        >
-                                            Adicionar
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/*Modal Repeat Request*/}
-            <div style={{ marginBottom: "20px" }} className="col-lg-4 col-md-6">
-                <div className="mt-3">
-                    <div
-                        className="modal fade"
-                        id="basicModalUp"
-                        tabIndex={-1}
-                        aria-hidden="true"
-                    >
-                        <div className="modal-dialog" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="exampleModalLabel1">
-                                        Cadastrar Requisição
-                                    </h5>
-                                    <button
-                                        type="button"
-                                        className="btn-close"
-                                        data-bs-dismiss="modal"
-                                        aria-label="Close"
-                                    ></button>
-                                </div>
-                                <form>
-                                    <div className="modal-body">
-                                        <div className="row">
-                                            <div className="col mb-3">
-                                                <label htmlFor="nameBasic" className="form-label">
-                                                    Material
-                                                </label>
-                                                {/* <Autocomplete
-                                                    options={materialsOpt}
-                                                    sx={{ width: 200 }}
-                                                    renderInput={(params) => <TextField {...params} />}
-                                                    value={materialOpt}
-                                                    onChange={(
-                                                        e: any,
-                                                        newValue: TMaterialOpt | undefined
-                                                    ) => setMaterialOpt(newValue)}
-                                                /> */}
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col mb-3">
-                                                <label
-                                                    htmlFor="defaultFormControlInput"
-                                                    className="form-label"
-                                                >
-                                                    Quantidade
-                                                </label>
-                                                <input
-                                                    type="number"
-                                                    className="form-control"
-                                                    id="defaultFormControlInput"
-                                                    placeholder="1"
-                                                    aria-describedby="defaultFormControlHelp"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button
-                                            type="button"
-                                            className="btn btn-outline-secondary"
-                                            data-bs-dismiss="modal"
-                                        >
-                                            Cancelar
-                                        </button>
-                                        <button
-                                            data-bs-dismiss="modal"
-                                            aria-label="Close"
-                                            type="submit"
-                                            className="btn btn-primary"
-                                        >
-                                            Adicionar
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    <Link to={`/form-request`}>
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#basicModal"
+                        >
+                            Nova Requisição
+                        </button>
+                    </Link>
                 </div>
             </div>
 
@@ -316,13 +158,13 @@ export const Request = () => {
                                             </div>
                                             <span className="fw-semibold d-block mb-1">
                                                 <strong>
-                                                    {request.material_request[0].amount_requested.toString()}
+                                                    {request.material_request[0]?.amount_requested.toString()}
                                                 </strong>{" "}
                                                 unid.
                                             </span>
                                             <h3 className="card-title mb-2">
                                                 <strong>
-                                                    {request.material_request[0].material.name}
+                                                    {request.material_request[0]?.material.name}
                                                 </strong>{" "}
                                                 <span style={{ fontSize: "15px" }}>material.</span>
                                             </h3>
