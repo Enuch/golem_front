@@ -17,7 +17,7 @@ export const Material = () => {
             name: "",
             origin: "",
             amount: 1,
-            category_id: 1,
+            category_id: 0,
         },
         validationSchema: Yup.object({
             name: Yup.string().required("obrigatório!"),

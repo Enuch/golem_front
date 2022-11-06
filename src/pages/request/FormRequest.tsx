@@ -12,7 +12,7 @@ export const FormRequest = () => {
     const controllerMaterial = MaterialController();
     const formik = useFormik({
         initialValues: {
-            request: [{ material_id: 1, amount_requested: 0 }],
+            request: [{ material_id: 0, amount_requested: 0 }],
         },
         onSubmit: (values) => {
             console.log(values);
