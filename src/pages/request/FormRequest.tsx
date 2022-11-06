@@ -30,7 +30,12 @@ export const FormRequest = () => {
     }, []);
 
     const createR = (data: Object, data_MR: TMaterialRequest[]) => {
-        let newData = [{}]
+        let newData = data_MR.map((data) => ({
+            amount_requested: data.amount_requested,
+            amount_received: 0,
+            material_id: Number.parseInt(data.material_id.toString()),
+            request_id: 1
+        }))
         const request = controller.create(data);
         request.then((response) => {
             newData = data_MR.map((data) => ({
