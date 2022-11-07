@@ -1,12 +1,25 @@
+import { useFormik } from "formik";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/auth/AuthContext";
+
 export const Login = () => {
+    const auth = useContext(AuthContext);
+    const nav = useNavigate();
+
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            password: '',
+        },
+        onSubmit: (values) => {
+            auth.signin(values.username, values.password);
+            nav(`/`)
+        }
+    });
+
     return (
         <div className="container-xxl">
-            <head>
-                <link
-                    rel="stylesheet"
-                    href="./static/assets/vendor/css/pages/page-auth.css"
-                />
-            </head>
             <div className="authentication-wrapper authentication-basic container-p-y">
                 <div className="authentication-inner">
                     {/* <!-- Register --> */}
@@ -44,9 +57,9 @@ export const Login = () => {
                                             <g
                                                 id="g-app-brand"
                                                 stroke="none"
-                                                stroke-width="1"
+                                                strokeWidth="1"
                                                 fill="none"
-                                                fill-rule="evenodd"
+                                                fillRule="evenodd"
                                             >
                                                 <g
                                                     id="Brand-Logo"
@@ -67,7 +80,7 @@ export const Login = () => {
                                                             <g id="Path-3" mask="url(#mask-2)">
                                                                 <use fill="#696cff" xlinkHref="#path-3"></use>
                                                                 <use
-                                                                    fill-opacity="0.2"
+                                                                    fillOpacity="0.2"
                                                                     fill="#FFFFFF"
                                                                     xlinkHref="#path-3"
                                                                 ></use>
@@ -75,7 +88,7 @@ export const Login = () => {
                                                             <g id="Path-4" mask="url(#mask-2)">
                                                                 <use fill="#696cff" xlinkHref="#path-4"></use>
                                                                 <use
-                                                                    fill-opacity="0.2"
+                                                                    fillOpacity="0.2"
                                                                     fill="#FFFFFF"
                                                                     xlinkHref="#path-4"
                                                                 ></use>
@@ -87,7 +100,7 @@ export const Login = () => {
                                                         >
                                                             <use fill="#696cff" xlinkHref="#path-5"></use>
                                                             <use
-                                                                fill-opacity="0.2"
+                                                                fillOpacity="0.2"
                                                                 fill="#FFFFFF"
                                                                 xlinkHref="#path-5"
                                                             ></use>
@@ -108,20 +121,22 @@ export const Login = () => {
                             <form
                                 id="formAuthentication"
                                 className="mb-3"
-                                action="index.html"
-                                method="POST"
+                                onSubmit={formik.handleSubmit}
                             >
                                 <div className="mb-3">
-                                    <label htmlFor="email" className="form-label">
+                                    <label htmlFor="username" className="form-label">
                                         Usuário
                                     </label>
                                     <input
                                         type="text"
                                         className="form-control"
-                                        id="email"
-                                        name="email-username"
-                                        placeholder="Lucas"
+                                        id="username"
+                                        name="username"
+                                        placeholder="usuário"
                                         autoFocus={true}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        value={formik.values.username}
                                     />
                                 </div>
                                 <div className="mb-3 form-password-toggle">
@@ -141,6 +156,9 @@ export const Login = () => {
                                             name="password"
                                             placeholder="············"
                                             aria-describedby="password"
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.password}
                                         />
                                         <span className="input-group-text cursor-pointer">
                                             <i className="bx bx-hide"></i>

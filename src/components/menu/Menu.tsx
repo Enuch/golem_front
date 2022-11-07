@@ -1,6 +1,9 @@
+import { useContext } from "react"
 import { Link } from "react-router-dom"
+import { AuthContext } from "../../context/auth/AuthContext"
 
 export const Menu = () => {
+    const auth = useContext(AuthContext);
     return (
         <aside
             id="layout-menu"
@@ -161,7 +164,7 @@ export const Menu = () => {
                 </li>
 
                 <li className="menu-item">
-                    <Link to={`/login`} className="menu-link">
+                    <Link to={`/login`} className="menu-link" onClick={auth.signout}>
                         <i className="menu-icon tf-icons bx bx-log-out"></i>
                         <div data-i18n="Tables">Sair</div>
                     </Link>
