@@ -41,7 +41,7 @@ export const router = createBrowserRouter([
         element: <FormRequest />,
       },
       {
-        path: "/Details",
+        path: "/Details/:id",
         element: <Details />,
       },
     ]

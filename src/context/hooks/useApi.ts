@@ -11,7 +11,7 @@ export const useApi = () => ({
       "content-type": "application/json",
     };
 
-    const response = await Api.get("/profile/", { headers });
+    const response = await Api.get("/profile", { headers });
     return response.data;
   },
 

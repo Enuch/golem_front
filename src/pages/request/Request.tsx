@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { StatusBadge } from "../../components/status/StatusBadge";
 import { TRequest } from "../../types/TRequest";
 import { RequestController } from "./Request.controller";
 
@@ -150,7 +151,7 @@ export const Request = () => {
                                                         className="dropdown-menu dropdown-menu-end"
                                                         aria-labelledby="cardOpt3"
                                                     >
-                                                        <Link className="dropdown-item" to={`/details`}>
+                                                        <Link className="dropdown-item" to={`/details/${request.id}`}>
                                                             Detalhes
                                                         </Link>
                                                     </div>
@@ -168,9 +169,7 @@ export const Request = () => {
                                                 </strong>{" "}
                                                 <span style={{ fontSize: "15px" }}>material.</span>
                                             </h3>
-                                            <span className={setBadgeStatus(request.status)}>
-                                                {setStatus(request.status)}
-                                            </span>
+                                            <StatusBadge status={request.status} />
                                         </div>
                                     </div>
                                 </div>

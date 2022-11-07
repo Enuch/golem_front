@@ -1,12 +1,14 @@
 import { Field, FieldArray, FormikProvider, useFormik } from "formik";
 import { RequestController } from "./Request.controller";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TMaterial } from "../../types/TMaterial";
 import { MaterialController } from "../material/Material.controller";
 import { MaterialRequestController } from "./MaterialRequest.controller";
 import { TMaterialRequest } from "../../types/TMaterialRequest";
+import { AuthContext } from "../../context/auth/AuthContext";
 
 export const FormRequest = () => {
+    const auth = useContext(AuthContext);
     const controller = RequestController();
     const controllerMaterialRequest = MaterialRequestController();
     const controllerMaterial = MaterialController();
@@ -17,14 +19,14 @@ export const FormRequest = () => {
         onSubmit: (values) => {
             console.log(values);
             const newValues = values.request
-            createR(id, newValues);
+            createR({
+                requested_user_id: auth.user?.id
+            }, newValues);
         },
     });
 
     const [materials, setMaterials] = useState<TMaterial[]>([]);
-    const id = {
-        requested_user_id: 1
-    }
+
     useEffect(() => {
         controllerMaterial.findAll(setMaterials);
     }, []);
@@ -114,7 +116,7 @@ export const FormRequest = () => {
                                                                     className="btn btn-primary"
                                                                     type="button"
                                                                     onClick={() =>
-                                                                        arrayHelpers.push({ material_id: 1, amount_requested: 0 })
+                                                                        arrayHelpers.push({ material_id: 0, amount_requested: 0 })
                                                                     }
                                                                 >
                                                                     Adicionar

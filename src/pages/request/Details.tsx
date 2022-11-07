@@ -1,4 +1,24 @@
+import { useFormik } from "formik";
+import { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { StatusBadge } from "../../components/status/StatusBadge";
+import { AuthContext } from "../../context/auth/AuthContext";
+import { TRequest } from "../../types/TRequest";
+import { RequestController } from "./Request.controller";
+
 export const Details = () => {
+    const auth = useContext(AuthContext);
+    const controller = RequestController();
+    const { id } = useParams();
+    const id_request = Number.parseInt(id!);
+
+    const [request, setRequests] = useState<TRequest>();
+    const [materialAcept, setMaterialAcept] = useState<number[]>([])
+
+    useEffect(() => {
+        controller.findOne(id_request, setRequests);
+    }, []);
+
     return (
         <>
             {/*Titulo*/}
@@ -14,50 +34,48 @@ export const Details = () => {
                         <div className="card-header d-flex align-items-center justify-content-between pb-0">
                             <div className="card-title mb-0">
                                 <h5 className="m-0 me-2">Detalhes da Requisição</h5>
-                                {/* <small className={setBadgeStatus(request?.status!)}>
-                                        {setStatus(request?.status!)}
-                                    </small> */}
+                                <StatusBadge status={1} />
                             </div>
-                            {/* {request?.status! > 1 ? (
-                                    <div></div>
-                                ) : (
-                                    <div className="dropdown">
-                                        <button
-                                            className="btn p-0"
-                                            type="button"
-                                            id="orederStatistics"
-                                            data-bs-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
+                            {request?.status! > 1 ? (
+                                <div></div>
+                            ) : (
+                                <div className="dropdown">
+                                    <button
+                                        className="btn p-0"
+                                        type="button"
+                                        id="orederStatistics"
+                                        data-bs-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                    >
+                                        <i className="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div
+                                        className="dropdown-menu dropdown-menu-end"
+                                        aria-labelledby="orederStatistics"
+                                    >
+                                        {/* <a className="dropdown-item" href="">
+                                            Deletar
+                                        </a>
+                                        <a
+                                            onClick={() =>
+                                                handleSetRequest(
+                                                    request?.material_request[0].id!,
+                                                    request?.material_request[0].material.id!,
+                                                    request?.material_request[0].amount!,
+                                                    request?.origin!
+                                                )
+                                            }
+                                            className="dropdown-item"
+                                            href=""
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#basicModal"
                                         >
-                                            <i className="bx bx-dots-vertical-rounded"></i>
-                                        </button>
-                                        <div
-                                            className="dropdown-menu dropdown-menu-end"
-                                            aria-labelledby="orederStatistics"
-                                        >
-                                            <a className="dropdown-item" href="">
-                                                Deletar
-                                            </a>
-                                            <a
-                                                onClick={() =>
-                                                    handleSetRequest(
-                                                        request?.material_request[0].id!,
-                                                        request?.material_request[0].material.id!,
-                                                        request?.material_request[0].amount!,
-                                                        request?.origin!
-                                                    )
-                                                }
-                                                className="dropdown-item"
-                                                href=""
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#basicModal"
-                                            >
-                                                Editar
-                                            </a>
-                                        </div>
+                                            Editar
+                                        </a> */}
                                     </div>
-                                )} */}
+                                </div>
+                            )}
                         </div>
                         <div className="card-body">
                             <div
@@ -66,7 +84,7 @@ export const Details = () => {
                             >
                                 <div className="d-flex flex-column gap-0">
                                     <h4>Requisitante</h4>
-                                    {/* <span>{request?.requested_user.name}</span> */}
+                                    <span>{request?.requested_user.username}</span>
                                 </div>
                                 <div className="resize-triggers">
                                     <div className="expand-trigger">
@@ -76,27 +94,32 @@ export const Details = () => {
                                 </div>
                             </div>
                             <ul className="p-0 m-0">
-                                <li className="d-flex mb-4 pb-1">
-                                    <div className="avatar flex-shrink-0 me-3">
-                                        <span className="avatar-initial rounded bg-label-primary">
-                                            <i className="bx bx-mobile-alt"></i>
-                                        </span>
-                                    </div>
-                                    <div className="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                        <div className="me-2">
-                                            <h6 className="mb-0">Material</h6>
-                                            <small className="text-muted">
-                                                {/* {request?.material_request[0].material.name} */}
-                                            </small>
-                                        </div>
-                                        <div className="user-progress">
-                                            <small className="fw-semibold">
-                                                {/* {request?.material_request[0].amount.toString()}{" "} */}
-                                                <span>unid.</span>
-                                            </small>
-                                        </div>
-                                    </div>
-                                </li>
+                                {request?.material_request.map((material) => {
+                                    return (
+                                        <li key={material.id} className="d-flex mb-4 pb-1">
+                                            <div className="avatar flex-shrink-0 me-3">
+                                                <span className="avatar-initial rounded bg-label-primary">
+                                                    <i className="bx bx-mobile-alt"></i>
+                                                </span>
+                                            </div>
+                                            <div className="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                                <div className="me-2">
+                                                    <h6 className="mb-0">{material.material.name}</h6>
+
+                                                    <small className="text-muted">
+                                                        {material.material.origin}
+                                                    </small>
+                                                </div>
+                                                <div className="user-progress">
+                                                    <small className="fw-semibold">
+                                                        {material.amount_requested}
+                                                        <span>unid.</span>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    );
+                                })}
                                 <li className="d-flex mb-4 pb-1">
                                     <div className="avatar flex-shrink-0 me-3">
                                         <span className="avatar-initial rounded bg-label-success">
@@ -107,27 +130,11 @@ export const Details = () => {
                                         <div className="me-2">
                                             <h6 className="mb-0">Data de Requisição</h6>
                                             <small className="text-muted">
-                                                {/* {request?.requested_date.toString()} */}
+                                                {request?.created_date.toString()}
                                             </small>
                                         </div>
                                         <div className="user-progress">
                                             <small className="fw-semibold">23h ago</small>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li className="d-flex mb-4 pb-1">
-                                    <div className="avatar flex-shrink-0 me-3">
-                                        <span className="avatar-initial rounded bg-label-info">
-                                            <i className="bx bx-home-alt"></i>
-                                        </span>
-                                    </div>
-                                    <div className="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                        <div className="me-2">
-                                            <h6 className="mb-0">Origem</h6>
-                                            {/* <small className="text-muted">{request?.origin}</small> */}
-                                        </div>
-                                        <div className="user-progress">
-                                            <small className="fw-semibold">849k</small>
                                         </div>
                                     </div>
                                 </li>
@@ -149,73 +156,72 @@ export const Details = () => {
                         <div className="card-header d-flex align-items-center justify-content-between pb-0">
                             <div className="d-flex flex-column gap-0">
                                 <h4>Reposta de</h4>
-                                {/* <span>{auth.user?.name}</span> */}
+                                <span>{auth.user?.username}</span>
                             </div>
-                            {/* {request?.status! > 1 ? (
-                                    <div></div>
-                                ) : (
-                                    <div className="dropdown">
-                                        <input
-                                            className="btn btn-primary"
-                                            type="submit"
-                                            value="Aceitar"
-                                            style={{ marginRight: "5px" }}
-                                        />
-                                        <input
-                                            className="btn btn-outline-secondary"
-                                            onClick={rejectRequest}
-                                            type="button"
-                                            value="Recusar"
-                                        />
-                                    </div>
-                                )} */}
+                            {request?.status! > 1 ? (
+                                <div></div>
+                            ) : (
+                                <div className="dropdown">
+                                    <input
+                                        className="btn btn-primary"
+                                        type="submit"
+                                        value="Aceitar"
+                                        style={{ marginRight: "5px" }}
+                                    />
+                                    <input
+                                        className="btn btn-outline-secondary"
+                                        type="button"
+                                        value="Recusar"
+                                    />
+                                </div>
+                            )}
                         </div>
                         <br />
                         <div className="card-body">
-                            <div
-                                className="d-flex justify-content-between align-items-center mb-3"
-                                style={{ position: "relative" }}
-                            >
-                                <div>
-                                    <label
-                                        htmlFor="defaultFormControlInput"
-                                        className="form-label"
-                                    >
-                                        Quantidade aceita
-                                    </label>
-                                    {/* {request?.status! > 1 ? (
-                                            <p> {materialEntrance?.amount} </p>
-                                        ) : (
-                                            <input
-                                                value={amountAcept?.toString()}
-                                                onChange={(e) =>
-                                                    setAmountAcept(Number.parseInt(e.target.value))
-                                                }
-                                                type="number"
-                                                max={request?.material_request[0].amount.toString()}
-                                                min={1}
-                                                className="form-control"
-                                                id="defaultFormControlInput"
-                                                placeholder="0"
-                                                aria-describedby="defaultFormControlHelp"
-                                            />
-                                        )} */}
-
+                            {request?.material_request.map((material, index) => {
+                                return (
                                     <div
-                                        id="defaultFormControlHelp"
-                                        className="form-text"
-                                    ></div>
-                                </div>
-                                <div>
-                                    <label
-                                        htmlFor="defaultFormControlInput"
-                                        className="form-label"
+                                        key={material.id}
+                                        className="d-flex justify-content-between align-items-center mb-3"
+                                        style={{ position: "relative" }}
                                     >
-                                        Quantidade pedida
-                                    </label>
-                                    {/* <p>{request?.material_request[0].amount.toString()}</p> */}
-                                </div>
-                            </div>
+                                        <div>
+                                            <label
+                                                htmlFor="defaultFormControlInput"
+                                                className="form-label"
+                                            >
+                                                Quantidade aceita
+                                            </label>
+                                            {request?.status! > 1 ? (
+                                                <p> {material.amount_received} </p>
+                                            ) : (
+                                                <input
+                                                    type="number"
+                                                    className="form-control"
+                                                    id="defaultFormControlInput"
+                                                    placeholder="0"
+                                                    aria-describedby="defaultFormControlHelp"
+                                                    value={materialAcept[index]}
+                                                />
+                                            )}
+
+                                            <div
+                                                id="defaultFormControlHelp"
+                                                className="form-text"
+                                            ></div>
+                                        </div>
+                                        <div>
+                                            <label
+                                                htmlFor="defaultFormControlInput"
+                                                className="form-label"
+                                            >
+                                                Quantidade pedida
+                                            </label>
+                                            <p>{material.amount_requested}</p>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </form>
                 </div>
