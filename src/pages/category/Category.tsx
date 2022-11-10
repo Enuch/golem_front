@@ -148,7 +148,7 @@ export const Category = () => {
                                             Cancelar
                                         </button>
                                         <button
-                                            data-bs-dismiss={formik.touched && formik.errors ? null : "modal"}
+                                            data-bs-dismiss={formik.touched.name && formik.errors.name ? null : "modal"}
                                             aria-label="Close"
                                             type="submit"
                                             className="btn btn-primary"
@@ -217,7 +217,7 @@ export const Category = () => {
                                             Cancelar
                                         </button>
                                         <button
-                                            data-bs-dismiss={formik.touched && formik.errors ? null : "modal"}
+                                            data-bs-dismiss={formik.errors.name ? null : "modal"}
                                             aria-label="Close"
                                             type="submit"
                                             className="btn btn-primary"

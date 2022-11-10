@@ -7,7 +7,6 @@ export const Home = () => {
             <div className="layout-container">
                 <Menu />
                 <div className='layout-page'>
-
                     <br /><br />
                     <div className='container-xxl'>
                         <Outlet />

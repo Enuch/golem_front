@@ -27,15 +27,14 @@ export const Material = () => {
         }),
 
         onSubmit: (values) => {
-            console.log(values)
-            values.category_id = Number.parseInt(values.category_id.toString())
+            values.category_id = Number.parseInt(values.category_id.toString());
             createM(values);
             alert("Material cadastrado com sucesso!");
         },
     });
 
     const [materials, setMaterials] = useState<TMaterial[]>([]);
-    const [categories, setCategories] = useState<TCategory[]>([])
+    const [categories, setCategories] = useState<TCategory[]>([]);
     const [refresh, setRefresh] = useState<number>(0);
 
     useEffect(() => {
@@ -46,48 +45,50 @@ export const Material = () => {
     const createM = async (data: Object) => {
         await controller.create(data);
         setRefresh(refresh + 1);
-    }
+    };
 
     const deleteM = async (id: number) => {
         await controller.delete(id);
         setRefresh(refresh + 1);
-    }
+    };
 
     // FILTRO
-    const [filtro, setFiltro] = useState('')
+    const [filtro, setFiltro] = useState("");
 
-    const lowerCase = filtro?.toLocaleLowerCase()
-    const materialsFiltered = materials.filter(material => {
-        return material.name.toLowerCase().includes(lowerCase)
-    })
+    const lowerCase = filtro?.toLocaleLowerCase();
+    const materialsFiltered = materials.filter((material) => {
+        return material.name.toLowerCase().includes(lowerCase);
+    });
 
     // PAGINAÇÃO
-    const [itensPerPage] = useState(5)
-    const [currentPage, setCurrentPage] = useState(0)
+    const [itensPerPage] = useState(5);
+    const [currentPage, setCurrentPage] = useState(0);
 
-    const pages = Math.ceil(materialsFiltered.length / itensPerPage)
+    const pages = Math.ceil(materialsFiltered.length / itensPerPage);
     const startIndex = currentPage * itensPerPage;
     const endIndex = startIndex + itensPerPage;
-    const currentItens = materialsFiltered.slice(startIndex, endIndex)
+    const currentItens = materialsFiltered.slice(startIndex, endIndex);
 
-    const [flag, setFlag] = useState(0)
-    let red = 0
+    const [flag, setFlag] = useState(0);
+    let red = 0;
 
     useEffect(() => {
         if (previuosPage - 1 > currentPage) {
-            if (flag === 0) { setFlag(flag) }
-            else {
-                setFlag(flag - 1)
-                previuosPage = currentPage - 1
+            if (flag === 0) {
+                setFlag(flag);
+            } else {
+                setFlag(flag - 1);
+                previuosPage = currentPage - 1;
             }
         } else if (previuosPage + 1 < currentPage) {
-            if (flag === pages) { setFlag(flag) }
-            else {
-                setFlag(flag + 1)
-                previuosPage = currentPage + 1
+            if (flag === pages) {
+                setFlag(flag);
+            } else {
+                setFlag(flag + 1);
+                previuosPage = currentPage + 1;
             }
         }
-    }, [currentPage, flag, pages])
+    }, [currentPage, flag, pages]);
 
     return (
         <>
@@ -133,10 +134,7 @@ export const Material = () => {
                                         <div className="modal-body">
                                             <div className="row">
                                                 <div className="col mb-3">
-                                                    <label
-                                                        htmlFor="name"
-                                                        className="form-label"
-                                                    >
+                                                    <label htmlFor="name" className="form-label">
                                                         Nome
                                                     </label>
                                                     <input
@@ -157,10 +155,7 @@ export const Material = () => {
                                             </div>
                                             <div className="row">
                                                 <div className="col mb-3">
-                                                    <label
-                                                        htmlFor="origin"
-                                                        className="form-label"
-                                                    >
+                                                    <label htmlFor="origin" className="form-label">
                                                         Origin
                                                     </label>
                                                     <input
@@ -181,10 +176,7 @@ export const Material = () => {
                                             </div>
                                             <div className="row">
                                                 <div className="col mb-3">
-                                                    <label
-                                                        htmlFor="amount"
-                                                        className="form-label"
-                                                    >
+                                                    <label htmlFor="amount" className="form-label">
                                                         Quantidade
                                                     </label>
                                                     <input
@@ -205,10 +197,7 @@ export const Material = () => {
                                             </div>
                                             <div className="row">
                                                 <div className="col mb-3">
-                                                    <label
-                                                        htmlFor="category_id"
-                                                        className="form-label"
-                                                    >
+                                                    <label htmlFor="category_id" className="form-label">
                                                         Categoria
                                                     </label>
                                                     <Field
@@ -243,7 +232,14 @@ export const Material = () => {
                                                 Cancelar
                                             </button>
                                             <button
-                                                data-bs-dismiss="modal"
+                                                data-bs-dismiss={
+                                                    formik.errors.amount ||
+                                                        formik.errors.origin ||
+                                                        formik.errors.category_id ||
+                                                        formik.errors.name
+                                                        ? null
+                                                        : "modal"
+                                                }
                                                 aria-label="Close"
                                                 type="submit"
                                                 className="btn btn-primary"
@@ -276,7 +272,9 @@ export const Material = () => {
                                         <button
                                             type="button"
                                             className="btn-close"
-                                            data-bs-dismiss={formik.touched && formik.errors ? null : "modal"}
+                                            data-bs-dismiss={
+                                                formik.touched && formik.errors ? null : "modal"
+                                            }
                                             aria-label="Close"
                                         ></button>
                                     </div>
@@ -284,10 +282,7 @@ export const Material = () => {
                                         <div className="modal-body">
                                             <div className="row">
                                                 <div className="col mb-3">
-                                                    <label
-                                                        htmlFor="name"
-                                                        className="form-label"
-                                                    >
+                                                    <label htmlFor="name" className="form-label">
                                                         Nome
                                                     </label>
                                                     <input
@@ -308,10 +303,7 @@ export const Material = () => {
                                             </div>
                                             <div className="row">
                                                 <div className="col mb-3">
-                                                    <label
-                                                        htmlFor="origin"
-                                                        className="form-label"
-                                                    >
+                                                    <label htmlFor="origin" className="form-label">
                                                         Origin
                                                     </label>
                                                     <input
@@ -332,10 +324,7 @@ export const Material = () => {
                                             </div>
                                             <div className="row">
                                                 <div className="col mb-3">
-                                                    <label
-                                                        htmlFor="amount"
-                                                        className="form-label"
-                                                    >
+                                                    <label htmlFor="amount" className="form-label">
                                                         Quantidade
                                                     </label>
                                                     <input
@@ -356,10 +345,7 @@ export const Material = () => {
                                             </div>
                                             <div className="row">
                                                 <div className="col mb-3">
-                                                    <label
-                                                        htmlFor="category_id"
-                                                        className="form-label"
-                                                    >
+                                                    <label htmlFor="category_id" className="form-label">
                                                         Categoria
                                                     </label>
                                                     <Field
@@ -408,7 +394,6 @@ export const Material = () => {
                     </div>
                 </div>
             </FormikProvider>
-
 
             {/* Busca */}
             <Filter filtro={filtro} fun={setFiltro} />
@@ -462,26 +447,57 @@ export const Material = () => {
             {/* PAGINAÇÃO */}
             <nav aria-label="Page navigation">
                 <ul className="pagination justify-content-center">
-                    <li value={0} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item first">
-                        <p style={{ cursor: "pointer" }} className="page-link"><i className="tf-icon bx bx-chevrons-left"></i></p>
+                    <li
+                        value={0}
+                        onClick={(e) => setCurrentPage(Number(e.currentTarget.value))}
+                        className="page-item first"
+                    >
+                        <p style={{ cursor: "pointer" }} className="page-link">
+                            <i className="tf-icon bx bx-chevrons-left"></i>
+                        </p>
                     </li>
-                    <li value={(currentPage < 1) ? currentPage : currentPage - 1} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item prev">
-                        <p style={{ cursor: "pointer" }} className="page-link"><i className="tf-icon bx bx-chevron-left"></i></p>
+                    <li
+                        value={currentPage < 1 ? currentPage : currentPage - 1}
+                        onClick={(e) => setCurrentPage(Number(e.currentTarget.value))}
+                        className="page-item prev"
+                    >
+                        <p style={{ cursor: "pointer" }} className="page-link">
+                            <i className="tf-icon bx bx-chevron-left"></i>
+                        </p>
                     </li>
                     {Array.from(Array(pages), (item, index) => {
-                        if (red > 2) return red++
+                        if (red > 2) return red++;
                         return (
-                            <li key={index} value={index + flag} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item">
-                                <p style={{ cursor: "pointer" }} className="page-link">{index + flag}</p>
+                            <li
+                                key={index}
+                                value={index + flag}
+                                onClick={(e) => setCurrentPage(Number(e.currentTarget.value))}
+                                className="page-item"
+                            >
+                                <p style={{ cursor: "pointer" }} className="page-link">
+                                    {index + flag}
+                                </p>
                             </li>
-                        )
+                        );
                     })}
 
-                    <li value={(currentPage > pages - 2) ? currentPage : currentPage + 1} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item next">
-                        <p style={{ cursor: "pointer" }} className="page-link"><i className="tf-icon bx bx-chevron-right"></i></p>
+                    <li
+                        value={currentPage > pages - 2 ? currentPage : currentPage + 1}
+                        onClick={(e) => setCurrentPage(Number(e.currentTarget.value))}
+                        className="page-item next"
+                    >
+                        <p style={{ cursor: "pointer" }} className="page-link">
+                            <i className="tf-icon bx bx-chevron-right"></i>
+                        </p>
                     </li>
-                    <li value={pages - 1} onClick={(e) => setCurrentPage(Number(e.currentTarget.value))} className="page-item last">
-                        <p style={{ cursor: "pointer" }} className="page-link"><i className="tf-icon bx bx-chevrons-right"></i></p>
+                    <li
+                        value={pages - 1}
+                        onClick={(e) => setCurrentPage(Number(e.currentTarget.value))}
+                        className="page-item last"
+                    >
+                        <p style={{ cursor: "pointer" }} className="page-link">
+                            <i className="tf-icon bx bx-chevrons-right"></i>
+                        </p>
                     </li>
                 </ul>
             </nav>

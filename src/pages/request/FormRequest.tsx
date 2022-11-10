@@ -6,9 +6,13 @@ import { MaterialController } from "../material/Material.controller";
 import { MaterialRequestController } from "./MaterialRequest.controller";
 import { TMaterialRequest } from "../../types/TMaterialRequest";
 import { AuthContext } from "../../context/auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export const FormRequest = () => {
     const auth = useContext(AuthContext);
+    const obj = { requested_user_id: auth.user?.id }
+    const navigate = useNavigate();
+
     const controller = RequestController();
     const controllerMaterialRequest = MaterialRequestController();
     const controllerMaterial = MaterialController();
@@ -17,11 +21,8 @@ export const FormRequest = () => {
             request: [{ material_id: 0, amount_requested: 0 }],
         },
         onSubmit: (values) => {
-            console.log(values);
             const newValues = values.request
-            createR({
-                requested_user_id: auth.user?.id
-            }, newValues);
+            createR(newValues);
         },
     });
 
@@ -31,23 +32,25 @@ export const FormRequest = () => {
         controllerMaterial.findAll(setMaterials);
     }, []);
 
-    const createR = (data: Object, data_MR: TMaterialRequest[]) => {
+    const createR = async (data_MR: TMaterialRequest[]) => {
         let newData = data_MR.map((data) => ({
             amount_requested: data.amount_requested,
             amount_received: 0,
             material_id: Number.parseInt(data.material_id.toString()),
-            request_id: 1
+            request_id: 0
         }))
-        const request = controller.create(data);
-        request.then((response) => {
+        const request = controller.create(obj);
+        await request.then((response) => {
             newData = data_MR.map((data) => ({
                 amount_requested: data.amount_requested,
                 amount_received: 0,
                 material_id: Number.parseInt(data.material_id.toString()),
                 request_id: response.id
+
             }))
         })
         controllerMaterialRequest.createMany(newData);
+        navigate(`/request`)
     };
 
     return (

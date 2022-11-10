@@ -1,5 +1,5 @@
-import { useFormik } from "formik";
-import { useContext, useEffect, useState } from "react";
+import { Field, FieldArray, FormikProvider, useFormik } from "formik";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { StatusBadge } from "../../components/status/StatusBadge";
 import { AuthContext } from "../../context/auth/AuthContext";
@@ -12,12 +12,25 @@ export const Details = () => {
     const { id } = useParams();
     const id_request = Number.parseInt(id!);
 
-    const [request, setRequests] = useState<TRequest>();
-    const [materialAcept, setMaterialAcept] = useState<number[]>([])
-
     useEffect(() => {
         controller.findOne(id_request, setRequests);
     }, []);
+
+    const [request, setRequests] = useState<TRequest>();
+    const material_requests = request?.material_request.map((item) => ({
+        amount_received: item.amount_received,
+        amount_requested: item.amount_requested
+    }))
+    console.log(material_requests)
+
+    const formik = useFormik({
+        initialValues: {
+            request: material_requests,
+        },
+        onSubmit: (values) => {
+            console.log(values.request);
+        },
+    });
 
     return (
         <>
@@ -148,37 +161,89 @@ export const Details = () => {
                 <div className="col-md-6 col-lg-4 col-xl-2 order-0 mb-4"></div>
 
                 <div className="col-md-6 col-lg-8 order-1 mb-4">
-                    <form
-                        id="form-action-request"
-                        className="card h-100"
-                    // onSubmit={aceptRequest}
-                    >
-                        <div className="card-header d-flex align-items-center justify-content-between pb-0">
-                            <div className="d-flex flex-column gap-0">
-                                <h4>Reposta de</h4>
-                                <span>{auth.user?.username}</span>
-                            </div>
-                            {request?.status! > 1 ? (
-                                <div></div>
-                            ) : (
-                                <div className="dropdown">
-                                    <input
-                                        className="btn btn-primary"
-                                        type="submit"
-                                        value="Aceitar"
-                                        style={{ marginRight: "5px" }}
-                                    />
-                                    <input
-                                        className="btn btn-outline-secondary"
-                                        type="button"
-                                        value="Recusar"
-                                    />
+                    <FormikProvider value={formik}>
+                        <form
+                            id="form-action-request"
+                            className="card h-100"
+                            onSubmit={formik.handleSubmit}
+                        >
+                            <div className="card-header d-flex align-items-center justify-content-between pb-0">
+                                <div className="d-flex flex-column gap-0">
+                                    <h4>Reposta de</h4>
+                                    <span>{auth.user?.username}</span>
                                 </div>
-                            )}
-                        </div>
-                        <br />
-                        <div className="card-body">
-                            {request?.material_request.map((material, index) => {
+                                {request?.status! > 1 ? (
+                                    <div></div>
+                                ) : (
+                                    <div className="dropdown">
+                                        <input
+                                            className="btn btn-primary"
+                                            type="submit"
+                                            value="Aceitar"
+                                            style={{ marginRight: "5px" }}
+                                        />
+                                        <input
+                                            className="btn btn-outline-secondary"
+                                            type="button"
+                                            value="Recusar"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                            <br />
+                            <div className="card-body">
+                                <FieldArray
+                                    name="request"
+                                    render={(arrayHelpers) => (
+                                        <div>
+                                            {formik.values.request?.map((re, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="d-flex justify-content-between align-items-center mb-3"
+                                                    style={{ position: "relative" }}
+                                                >
+
+                                                    <div>
+                                                        <label
+                                                            htmlFor="defaultFormControlInput"
+                                                            className="form-label"
+                                                        >
+                                                            Quantidade aceita
+                                                        </label>
+                                                        {request?.status! > 1 ? (
+                                                            <p> {re.amount_received} </p>
+                                                        ) : (
+                                                            <Field
+                                                                type="number"
+                                                                name={`request[${index}].amount_received`}
+                                                                className="form-control"
+                                                                id="defaultFormControlInput"
+                                                                placeholder="0"
+                                                                aria-describedby="defaultFormControlHelp"
+                                                            />
+                                                        )}
+
+                                                        <div
+                                                            id="defaultFormControlHelp"
+                                                            className="form-text"
+                                                        ></div>
+                                                    </div>
+                                                    <div>
+                                                        <label
+                                                            htmlFor="defaultFormControlInput"
+                                                            className="form-label"
+                                                        >
+                                                            Quantidade pedida
+                                                        </label>
+                                                        <p>{re.amount_requested}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                />
+
+                                {/* {request?.material_request.map((material, index) => {
                                 return (
                                     <div
                                         key={material.id}
@@ -201,7 +266,7 @@ export const Details = () => {
                                                     id="defaultFormControlInput"
                                                     placeholder="0"
                                                     aria-describedby="defaultFormControlHelp"
-                                                    value={materialAcept[index]}
+                                                    onChange={(e) => handleMaterialAcept({ value: e.target.value, id: material.id }, index)}
                                                 />
                                             )}
 
@@ -221,9 +286,10 @@ export const Details = () => {
                                         </div>
                                     </div>
                                 );
-                            })}
-                        </div>
-                    </form>
+                            })} */}
+                            </div>
+                        </form>
+                    </FormikProvider>
                 </div>
             </div>
         </>
