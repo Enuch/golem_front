@@ -13,7 +13,7 @@ let update: boolean = false;
 export const User = () => {
     const controller = UserController();
     const [formValues, setFormValues] = useState<TUser>();
-    const [initialValues, setInitialVlues] = useState({
+    const [initialValues, setInitialValues] = useState({
         username: "",
         password: "",
         email: "",
@@ -40,32 +40,12 @@ export const User = () => {
 
             if (update === true) {
                 updateU(values.id!, values);
-                toast.success("Usuário atualizado!", {
-                    position: "top-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
             } else {
                 createU(values);
-                toast.success("Usuário cadastrado!", {
-                    position: "top-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
             }
             update = false;
             setFormValues(undefined);
-            setInitialVlues({
+            setInitialValues({
                 username: '',
                 password: "",
                 email: "",
@@ -102,11 +82,31 @@ export const User = () => {
 
     const createU = async (data: Object) => {
         await controller.create(data);
+        toast.success("Usuário cadastrado!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
         setRefresh(refresh + 1);
     };
 
     const updateU = async (id: number, data: Object) => {
         await controller.update(id, data);
+        toast.success("Usuário atualizado!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
         setRefresh(refresh + 1);
     };
 

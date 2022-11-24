@@ -4,23 +4,30 @@ import { TCategory } from "../../types/TCategory";
 import { CategoryController } from "./Category.controller";
 import * as Yup from 'yup'
 import { Filter } from "../../components/filter/Filter";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 let previuosPage = 0
+let update = false
 
 export const Category = () => {
     const controller = CategoryController();
+    const [formValues, setFormValues] = useState<TCategory>()
+    const [initialValues, setInitialValues] = useState({ name: '', id: 0 })
     const formik = useFormik({
-        initialValues: {
-            name: "",
-        },
+        initialValues: formValues || initialValues,
         validationSchema: Yup.object({
             name: Yup.string().required("O nome é obrigatório!")
         }),
-
+        enableReinitialize: true,
         onSubmit: (values) => {
-            alert("Categoria cadastrado com sucesso!");
-            console.log(values)
-            createC(values);
+            if (update === true) {
+                updateC(values.id, values)
+            } else {
+                createC(values);
+            }
+            update = false;
+            setFormValues(undefined)
         },
     });
 
@@ -33,12 +40,58 @@ export const Category = () => {
 
     const createC = async (data: Object) => {
         await controller.create(data);
+        toast.success("Categoria cadastrada!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
         setRefresh(refresh + 1)
     };
 
-    const deleteC = async (id: number) => {
-        await controller.delete(id)
+    const setUpdate = (data: TCategory) => {
+        update = true;
+        setFormValues(data)
+    }
+
+    const updateC = async (id: number, data: Object) => {
+        await controller.update(id, data);
+        toast.success("Categoria atualizada!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
         setRefresh(refresh + 1)
+    };
+
+    const deleteC = async (event: any) => {
+        event.preventDefault();
+        await controller.delete(formValues?.id!)
+        toast.success("Categoria deletada!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+        setRefresh(refresh + 1)
+    }
+
+    const cancelForm = () => {
+        update = false;
+        setFormValues(undefined)
     }
 
     // filtro
@@ -79,6 +132,8 @@ export const Category = () => {
 
     return (
         <>
+            <ToastContainer />
+
             {/*Titulo*/}
             <h4 className="fw-bold py-3 mb-4">
                 <span className="text-muted fw-light">Categorias /</span> Lista
@@ -114,6 +169,7 @@ export const Category = () => {
                                         className="btn-close"
                                         data-bs-dismiss="modal"
                                         aria-label="Close"
+                                        onClick={cancelForm}
                                     ></button>
                                 </div>
                                 <form onSubmit={formik.handleSubmit}>
@@ -131,10 +187,11 @@ export const Category = () => {
                                                     placeholder="Enter Name"
                                                     onChange={formik.handleChange}
                                                     onBlur={formik.handleBlur}
-                                                    value={formik.values.name || ""}
+                                                    value={formik.values.name}
+                                                    required
                                                 />
                                                 {formik.touched.name && formik.errors.name ? (
-                                                    <div>{formik.errors.name}</div>
+                                                    <div style={{ color: 'red', fontWeight: 'bolder' }}>{formik.errors.name}</div>
                                                 ) : null}
                                             </div>
                                         </div>
@@ -144,6 +201,7 @@ export const Category = () => {
                                             type="button"
                                             className="btn btn-outline-secondary"
                                             data-bs-dismiss="modal"
+                                            onClick={cancelForm}
                                         >
                                             Cancelar
                                         </button>
@@ -176,7 +234,7 @@ export const Category = () => {
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel1">
-                                        Editar Categoria
+                                        Deseja excluir?
                                     </h5>
                                     <button
                                         type="button"
@@ -185,29 +243,7 @@ export const Category = () => {
                                         aria-label="Close"
                                     ></button>
                                 </div>
-                                <form onSubmit={formik.handleSubmit}>
-                                    <div className="modal-body">
-                                        <div className="row">
-                                            <div className="col mb-3">
-                                                <label htmlFor="name" className="form-label">
-                                                    Nome
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    id="name"
-                                                    name="name"
-                                                    className="form-control"
-                                                    placeholder="Enter Name"
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                    value={formik.values.name || ""}
-                                                />
-                                                {formik.touched.name && formik.errors.name ? (
-                                                    <div>{formik.errors.name}</div>
-                                                ) : null}
-                                            </div>
-                                        </div>
-                                    </div>
+                                <form onSubmit={deleteC}>
                                     <div className="modal-footer">
                                         <button
                                             type="button"
@@ -217,12 +253,12 @@ export const Category = () => {
                                             Cancelar
                                         </button>
                                         <button
-                                            data-bs-dismiss={formik.errors.name ? null : "modal"}
+                                            data-bs-dismiss="modal"
                                             aria-label="Close"
                                             type="submit"
                                             className="btn btn-primary"
                                         >
-                                            Adicionar
+                                            Sim
                                         </button>
                                     </div>
                                 </form>
@@ -253,14 +289,16 @@ export const Category = () => {
                                         <td>{item.name}</td>
                                         <td>
                                             <p>
-                                                <i onClick={() => { deleteC(item.id) }}
+                                                <i onClick={() => setFormValues(item)}
                                                     className="fa-solid fa-trash"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#basicModalUp"
                                                     style={{ cursor: "pointer" }}
                                                 ></i>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <i
+                                                <i onClick={() => setUpdate(item)}
                                                     data-bs-toggle="modal"
-                                                    data-bs-target="#basicModalUp"
+                                                    data-bs-target="#basicModal"
                                                     className="fa-solid fa-pen-to-square"
                                                     style={{ cursor: "pointer" }}
                                                 ></i>
