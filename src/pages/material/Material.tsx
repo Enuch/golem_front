@@ -6,30 +6,42 @@ import * as Yup from "yup";
 import { TMaterial } from "../../types/TMaterial";
 import { CategoryController } from "../category/Category.controller";
 import { Filter } from "../../components/filter/Filter";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 let previuosPage = 0;
+let update = false
 
 export const Material = () => {
     const controller = MaterialController();
     const controllerCategory = CategoryController();
+    const [formValues, setFormValue] = useState<TMaterial>()
+    const [initialValues, setInitialValues] = useState({
+        name: "",
+        origin: "",
+        amount: 1,
+        category_id: 0,
+        id: 0,
+    })
     const formik = useFormik({
-        initialValues: {
-            name: "",
-            origin: "",
-            amount: 1,
-            category_id: 0,
-        },
+        initialValues: formValues || initialValues,
         validationSchema: Yup.object({
-            name: Yup.string().required("obrigatório!"),
-            origin: Yup.string().required("obrigatório!"),
-            amount: Yup.number().required("obrigatório!"),
-            category_id: Yup.number().required("obrigatório!"),
+            name: Yup.string().required("Obrigatório!"),
+            origin: Yup.string().required("Obrigatório!"),
+            amount: Yup.number().required("Obrigatório!"),
+            category_id: Yup.number().min(1).max(3).moreThan(0, 'Obrigatório!').required("Obrigatório!"),
         }),
-
+        enableReinitialize: true,
         onSubmit: (values) => {
             values.category_id = Number.parseInt(values.category_id.toString());
-            createM(values);
-            alert("Material cadastrado com sucesso!");
+
+            if (update === true) {
+                updateM(values.id, values as TMaterial)
+            } else {
+                createM(values);
+            }
+            update = false
+            setFormValue(undefined)
         },
     });
 
@@ -44,13 +56,65 @@ export const Material = () => {
 
     const createM = async (data: Object) => {
         await controller.create(data);
+        toast.success("Material cadastrado!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
         setRefresh(refresh + 1);
     };
 
-    const deleteM = async (id: number) => {
-        await controller.delete(id);
+    const setUpdate = async (data: TMaterial) => {
+        update = true;
+        setFormValue(data)
+    };
+
+    const updateM = async (id: number, data: TMaterial) => {
+        console.log(data)
+        await controller.update(id, {
+            name: data.name,
+            origin: data.origin,
+            amount: data.amount,
+            category_id: data.category_id,
+        });
+        toast.success("Material atualizado!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
         setRefresh(refresh + 1);
     };
+
+    const deleteM = async (event: any) => {
+        event.preventDefault();
+        await controller.delete(formValues?.id!);
+        toast.success("Material deletado!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+        setRefresh(refresh + 1);
+    };
+
+    const cancelForm = () => {
+        update = false;
+        setFormValue(undefined)
+    }
 
     // FILTRO
     const [filtro, setFiltro] = useState("");
@@ -92,6 +156,7 @@ export const Material = () => {
 
     return (
         <>
+            <ToastContainer />
             {/*Titulo*/}
             <h4 className="fw-bold py-3 mb-4">
                 <span className="text-muted fw-light">Materiais /</span> Lista
@@ -128,6 +193,7 @@ export const Material = () => {
                                             className="btn-close"
                                             data-bs-dismiss="modal"
                                             aria-label="Close"
+                                            onClick={cancelForm}
                                         ></button>
                                     </div>
                                     <form onSubmit={formik.handleSubmit}>
@@ -147,9 +213,10 @@ export const Material = () => {
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
                                                         value={formik.values.name}
+                                                        required
                                                     />
                                                     {formik.touched.name && formik.errors.name ? (
-                                                        <div>{formik.errors.name}</div>
+                                                        <div style={{ color: 'red', fontWeight: 'bolder' }}>{formik.errors.name}</div>
                                                     ) : null}
                                                 </div>
                                             </div>
@@ -168,9 +235,10 @@ export const Material = () => {
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
                                                         value={formik.values.origin}
+                                                        required
                                                     />
                                                     {formik.touched.origin && formik.errors.origin ? (
-                                                        <div>{formik.errors.origin}</div>
+                                                        <div style={{ color: 'red', fontWeight: 'bolder' }}>{formik.errors.origin}</div>
                                                     ) : null}
                                                 </div>
                                             </div>
@@ -189,9 +257,10 @@ export const Material = () => {
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
                                                         value={formik.values.amount}
+                                                        required
                                                     />
-                                                    {formik.touched.origin && formik.errors.origin ? (
-                                                        <div>{formik.errors.origin}</div>
+                                                    {formik.touched.amount && formik.errors.amount ? (
+                                                        <div style={{ color: 'red', fontWeight: 'bolder' }}>{formik.errors.amount}</div>
                                                     ) : null}
                                                 </div>
                                             </div>
@@ -210,6 +279,7 @@ export const Material = () => {
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
                                                         value={formik.values.category_id}
+                                                        required
                                                     >
                                                         <option value={0}>Selecione uma categoria</option>
                                                         {categories.map((category) => {
@@ -219,12 +289,16 @@ export const Material = () => {
                                                                 </option>
                                                             );
                                                         })}
+                                                        {formik.touched.category_id && formik.errors.category_id ? (
+                                                            <div style={{ color: 'red', fontWeight: 'bolder' }}>{formik.errors.category_id}</div>
+                                                        ) : null}
                                                     </Field>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="modal-footer">
                                             <button
+                                                onClick={cancelForm}
                                                 type="button"
                                                 className="btn btn-outline-secondary"
                                                 data-bs-dismiss="modal"
@@ -267,109 +341,16 @@ export const Material = () => {
                                 <div className="modal-content">
                                     <div className="modal-header">
                                         <h5 className="modal-title" id="exampleModalLabel1">
-                                            Editar Material
+                                            Deseja excluir?
                                         </h5>
                                         <button
                                             type="button"
                                             className="btn-close"
-                                            data-bs-dismiss={
-                                                formik.touched && formik.errors ? null : "modal"
-                                            }
+                                            data-bs-dismiss="modal"
                                             aria-label="Close"
                                         ></button>
                                     </div>
-                                    <form onSubmit={formik.handleSubmit}>
-                                        <div className="modal-body">
-                                            <div className="row">
-                                                <div className="col mb-3">
-                                                    <label htmlFor="name" className="form-label">
-                                                        Nome
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        id="name"
-                                                        name="name"
-                                                        placeholder="Limpeza"
-                                                        aria-describedby="defaultFormControlHelp"
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.name}
-                                                    />
-                                                    {formik.touched.name && formik.errors.name ? (
-                                                        <div>{formik.errors.name}</div>
-                                                    ) : null}
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col mb-3">
-                                                    <label htmlFor="origin" className="form-label">
-                                                        Origin
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        id="origin"
-                                                        name="origin"
-                                                        placeholder="UFRN"
-                                                        aria-describedby="defaultFormControlHelp"
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.origin}
-                                                    />
-                                                    {formik.touched.origin && formik.errors.origin ? (
-                                                        <div>{formik.errors.origin}</div>
-                                                    ) : null}
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col mb-3">
-                                                    <label htmlFor="amount" className="form-label">
-                                                        Quantidade
-                                                    </label>
-                                                    <input
-                                                        type="number"
-                                                        className="form-control"
-                                                        id="amount"
-                                                        name="amount"
-                                                        placeholder="1"
-                                                        aria-describedby="defaultFormControlHelp"
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.amount}
-                                                    />
-                                                    {formik.touched.origin && formik.errors.origin ? (
-                                                        <div>{formik.errors.origin}</div>
-                                                    ) : null}
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col mb-3">
-                                                    <label htmlFor="category_id" className="form-label">
-                                                        Categoria
-                                                    </label>
-                                                    <Field
-                                                        type="number"
-                                                        as="select"
-                                                        id="category_id"
-                                                        name="category_id"
-                                                        className="form-select"
-                                                        aria-label="Default select example"
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.category_id}
-                                                    >
-                                                        {categories.map((category) => {
-                                                            return (
-                                                                <option key={category.id} value={category.id}>
-                                                                    {category.name}
-                                                                </option>
-                                                            );
-                                                        })}
-                                                    </Field>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <form onSubmit={deleteM}>
                                         <div className="modal-footer">
                                             <button
                                                 type="button"
@@ -384,7 +365,7 @@ export const Material = () => {
                                                 type="submit"
                                                 className="btn btn-primary"
                                             >
-                                                Adicionar
+                                                Sim
                                             </button>
                                         </div>
                                     </form>
@@ -419,18 +400,20 @@ export const Material = () => {
                                         <td>{item.name}</td>
                                         <td>{item.origin}</td>
                                         <td>{item.amount.toString()}</td>
-                                        <td>{item.category.name}</td>
+                                        <td>{item.category?.name}</td>
                                         <td>
                                             <p>
                                                 <i
-                                                    onClick={() => deleteM(item.id)}
+                                                    onClick={() => setFormValue(item)}
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#basicModalUp"
                                                     className="fa-solid fa-trash"
                                                     style={{ cursor: "pointer" }}
                                                 ></i>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <i
+                                                <i onClick={() => setUpdate(item)}
                                                     data-bs-toggle="modal"
-                                                    data-bs-target="#basicModalUp"
+                                                    data-bs-target="#basicModal"
                                                     className="fa-solid fa-pen-to-square"
                                                     style={{ cursor: "pointer" }}
                                                 ></i>
