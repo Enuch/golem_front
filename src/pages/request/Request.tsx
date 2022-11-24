@@ -80,7 +80,6 @@ export const Request = () => {
                 <div className="mt-3">
                     <Link to={`/form-request`}>
                         <button
-                            type="button"
                             className="btn btn-primary"
                             data-bs-toggle="modal"
                             data-bs-target="#basicModal"
