@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { StatusBadge } from "../../components/status/StatusBadge";
 import { AuthContext } from "../../context/auth/AuthContext";
 import { TRequest } from "../../types/TRequest";
+import { formatDate } from "../../utils/utils";
 import { MaterialController } from "../material/Material.controller";
 import { MaterialRequestController } from "./MaterialRequest.controller";
 import { RequestController } from "./Request.controller";
@@ -165,7 +166,7 @@ export const Details = () => {
                                         <div className="me-2">
                                             <h6 className="mb-0">Data de Requisição</h6>
                                             <small className="text-muted">
-                                                {request?.created_date.toString()}
+                                                {formatDate(request?.created_date.toString()!)}
                                             </small>
                                         </div>
                                         <div className="user-progress">

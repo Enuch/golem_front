@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { StatusBadge } from "../../components/status/StatusBadge";
 import { TRequest } from "../../types/TRequest";
 import { RequestController } from "./Request.controller";
+import format, { parseISO } from 'date-fns'
+import ptBR from "date-fns/esm/locale/pt-BR/index.js";
+import { formatDate } from "../../utils/utils";
 
 let previuosPage = 0;
 
@@ -16,19 +20,7 @@ export const Request = () => {
         controller.findAll(setRequests);
     }, [refresh]);
 
-    const setStatus = (status: Number): string => {
-        if (status === 1) return "Em análise";
-        else if (status === 2) return "Enviado";
-        else if (status === 3) return "Cancelado";
-        return '';
-    }
-
-    const setBadgeStatus = (status: Number): string => {
-        if (status === 1) return "badge bg-label-secondary";
-        else if (status === 2) return "badge bg-label-success";
-        else if (status === 3) return "badge bg-label-danger";
-        return '';
-    }
+    const data = formatDate
 
     // FILTRO
     const [filtro, setFiltro] = useState(0);
@@ -70,6 +62,8 @@ export const Request = () => {
 
     return (
         <>
+            <ToastContainer />
+
             {/*Titulo*/}
             <h4 className="fw-bold py-3 mb-4">
                 <span className="text-muted fw-light">Requisições /</span> Lista
@@ -158,15 +152,15 @@ export const Request = () => {
                                             </div>
                                             <span className="fw-semibold d-block mb-1">
                                                 <strong>
-                                                    {request.material_request[0]?.amount_requested.toString()}
-                                                </strong>{" "}
-                                                unid.
+                                                    {request.material_request.length}
+                                                </strong>
+                                                {(request.material_request.length > 1) ? ' materiais requisitados.' : ' material requisitados.'}
                                             </span>
                                             <h3 className="card-title mb-2">
                                                 <strong>
-                                                    {request.material_request[0]?.material.name}
+                                                    {formatDate(request.created_date.toString())}
                                                 </strong>{" "}
-                                                <span style={{ fontSize: "15px" }}>material.</span>
+                                                <span style={{ fontSize: "15px" }}>data.</span>
                                             </h3>
                                             <StatusBadge status={request.status} />
                                         </div>

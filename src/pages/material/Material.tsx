@@ -29,7 +29,7 @@ export const Material = () => {
             name: Yup.string().required("Obrigatório!"),
             origin: Yup.string().required("Obrigatório!"),
             amount: Yup.number().required("Obrigatório!"),
-            category_id: Yup.number().min(1).max(3).moreThan(0, 'Obrigatório!').required("Obrigatório!"),
+            category_id: Yup.number().min(1).moreThan(0, 'Obrigatório!').required("Obrigatório!"),
         }),
         enableReinitialize: true,
         onSubmit: (values) => {

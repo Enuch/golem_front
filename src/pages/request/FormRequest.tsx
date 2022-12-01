@@ -7,6 +7,8 @@ import { MaterialRequestController } from "./MaterialRequest.controller";
 import { TMaterialRequest } from "../../types/TMaterialRequest";
 import { AuthContext } from "../../context/auth/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const FormRequest = () => {
     const auth = useContext(AuthContext);
@@ -16,21 +18,55 @@ export const FormRequest = () => {
     const controller = RequestController();
     const controllerMaterialRequest = MaterialRequestController();
     const controllerMaterial = MaterialController();
+
+    const [materials, setMaterials] = useState<TMaterial[]>([]);
+    const [validaMaterials, setValidaMaterials] = useState<TMaterial[]>([]);
+
     const formik = useFormik({
         initialValues: {
             request: [{ material_id: 0, amount_requested: 0 }],
         },
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
             const newValues = values.request
-            createR(newValues);
+            await controllerMaterial.findAll(setValidaMaterials)
+            validation(newValues)
         },
     });
 
-    const [materials, setMaterials] = useState<TMaterial[]>([]);
 
     useEffect(() => {
         controllerMaterial.findAll(setMaterials);
     }, []);
+
+    const validation = (data: any) => {
+        let errors = true;
+        data.forEach((value: { material_id: { toString: () => string; }; amount_requested: number; }) => {
+            validaMaterials.forEach(material => {
+                if (material.id === Number.parseInt(value.material_id.toString())) {
+                    if (material.amount < value.amount_requested) {
+                        toast.warning(`Quantidade pedida excede o limite do estoque! Material: ${material.name}, quantidade em estoque: ${material.amount}`, {
+                            position: "top-center",
+                            autoClose: 10000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light",
+                        });
+                        errors = true;
+                    } else {
+                        errors = false;
+                    }
+                }
+            })
+        })
+        if (!errors) {
+            createR(data)
+            navigate('/request')
+        }
+
+    }
 
     const createR = async (data_MR: TMaterialRequest[]) => {
         let newData = data_MR.map((data) => ({
@@ -50,11 +86,21 @@ export const FormRequest = () => {
             }))
         })
         controllerMaterialRequest.createMany(newData);
-        navigate(`/request`)
+        toast.success(`Requisição cadastrada!`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
     };
 
     return (
         <>
+            <ToastContainer />
             <div className="container-xxl flex-grow-1 container-p-y">
                 <h4 className="fw-bold py-3 mb-4">
                     <span className="text-muted fw-light">Requisições /</span> Formulário
