@@ -3,6 +3,7 @@ import {
 } from "react-router-dom";
 import { RequireAuth } from "../context/auth/RequireAuth";
 import { Category } from "../pages/category/Category";
+import { Dashboard } from "../pages/dashboard/Dashboard";
 import { Home } from "../pages/home/Home";
 import { Login } from "../pages/login/Login";
 import { Material } from "../pages/material/Material";
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
     path: "/",
     element: <RequireAuth><Home /></RequireAuth>,
     children: [
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
       {
         path: "/category",
         element: <Category />,

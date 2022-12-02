@@ -20,6 +20,11 @@ export const MenuHorizontal = () => {
             </div>
 
             <div className="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                <span>
+                    <i className="fa-solid fa-circle-exclamation">
+                    </i>{' '}
+                    4 Novas Requisições
+                </span>
                 {(auth.user?.role !== 3) ?
                     (
                         null

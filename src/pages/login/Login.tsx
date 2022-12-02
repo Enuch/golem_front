@@ -14,7 +14,7 @@ export const Login = () => {
         },
         onSubmit: (values) => {
             auth.signin(values.username, values.password);
-            nav(`/`)
+            nav(`/dashboard`)
         }
     });
 

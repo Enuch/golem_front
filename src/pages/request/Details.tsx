@@ -7,6 +7,8 @@ import { formatDate } from "../../utils/utils";
 import { MaterialController } from "../material/Material.controller";
 import { MaterialRequestController } from "./MaterialRequest.controller";
 import { RequestController } from "./Request.controller";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Details = () => {
     const auth = useContext(AuthContext);
@@ -34,32 +36,55 @@ export const Details = () => {
         setIds({ ...ids, [material_id]: material_amount - event.target.value });
     };
 
-    const aceptRequest = (event: any) => {
+    const aceptRequest = async (event: any) => {
         event.preventDefault();
-        controller.update(id_request, { status: 2 });
+        await controller.update(id_request, { status: 2 });
 
         for (const key in fields) {
-            materialRequestController.update(Number.parseInt(key), {
+            await materialRequestController.update(Number.parseInt(key), {
                 amount_received: Number.parseInt(fields[key]),
             });
         }
 
         for (const key in ids) {
-            materialController.update(Number.parseInt(key), {
+            await materialController.update(Number.parseInt(key), {
                 amount: Number.parseInt(ids[key]),
             });
         }
 
+        toast.success(`Requisição Aceita!`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+
         navigate(`/request`);
     };
 
-    const cancelRequest = () => {
+    const cancelRequest = async () => {
         controller.update(id_request, { status: 3 });
+        toast.success(`Requisição Cancelada!`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
         navigate(`/request`);
     };
 
     return (
         <>
+            <ToastContainer />
+
             {/*Titulo*/}
             <h4 className="fw-bold py-3 mb-4">
                 <span className="text-muted fw-light">Requisições /</span> Detalhes

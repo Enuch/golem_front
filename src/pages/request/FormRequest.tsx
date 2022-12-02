@@ -85,7 +85,7 @@ export const FormRequest = () => {
 
             }))
         })
-        controllerMaterialRequest.createMany(newData);
+        await controllerMaterialRequest.createMany(newData);
         toast.success(`Requisição cadastrada!`, {
             position: "top-center",
             autoClose: 5000,

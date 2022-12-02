@@ -8,6 +8,12 @@ export const MaterialController = () => ({
       .catch((err) => console.error(err));
   },
 
+  findAllByMinorAmount: async (fun: Function) => {
+    return await Api.get(`/material/findOrderAscAmount`)
+      .then((response) => fun(response.data))
+      .catch((err) => console.error(err));
+  },
+
   findOne: async (id: number, fun: Function): Promise<TMaterial> => {
     return await Api.get(`/material/${id}`)
       .then((response) => fun(response.data))
