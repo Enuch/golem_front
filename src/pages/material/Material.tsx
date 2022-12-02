@@ -19,7 +19,7 @@ export const Material = () => {
     const [initialValues, setInitialValues] = useState({
         name: "",
         origin: "",
-        amount: 1,
+        amount: "",
         category_id: 0,
         id: 0,
     })
@@ -172,7 +172,7 @@ export const Material = () => {
                             data-bs-toggle="modal"
                             data-bs-target="#basicModal"
                         >
-                            Novo Material
+                            Cadastrar Material
                         </button>
 
                         {/*Modal Create*/}
@@ -208,7 +208,6 @@ export const Material = () => {
                                                         className="form-control"
                                                         id="name"
                                                         name="name"
-                                                        placeholder="Limpeza"
                                                         aria-describedby="defaultFormControlHelp"
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
@@ -230,7 +229,6 @@ export const Material = () => {
                                                         className="form-control"
                                                         id="origin"
                                                         name="origin"
-                                                        placeholder="UFRN"
                                                         aria-describedby="defaultFormControlHelp"
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
@@ -252,7 +250,6 @@ export const Material = () => {
                                                         className="form-control"
                                                         id="amount"
                                                         name="amount"
-                                                        placeholder="1"
                                                         aria-describedby="defaultFormControlHelp"
                                                         onChange={formik.handleChange}
                                                         onBlur={formik.handleBlur}
@@ -330,7 +327,7 @@ export const Material = () => {
 
                 <div className="col-lg-4 col-md-6">
                     <div className="mt-3">
-                        {/*Modal Update*/}
+                        {/*Modal excluir*/}
                         <div
                             className="modal fade"
                             id="basicModalUp"
@@ -383,9 +380,10 @@ export const Material = () => {
             <div className="card" style={{ marginBottom: "20px", marginTop: "20px" }}>
                 <h5 className="card-header">Materiais</h5>
                 <div className="table-responsive text-nowrap">
-                    <table className="table table-borderless">
+                    <table className="table">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Nome</th>
                                 <th>Origem</th>
                                 <th>Quantidade</th>
@@ -397,6 +395,9 @@ export const Material = () => {
                             {currentItens.map((item) => {
                                 return (
                                     <tr key={item.id.toString()}>
+                                        <td>
+                                            <i className="fa-solid fa-box-open"></i>
+                                        </td>
                                         <td>{item.name}</td>
                                         <td>{item.origin}</td>
                                         <td>{item.amount.toString()}</td>
@@ -408,14 +409,14 @@ export const Material = () => {
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#basicModalUp"
                                                     className="fa-solid fa-trash"
-                                                    style={{ cursor: "pointer" }}
+                                                    style={{ cursor: "pointer", color: 'red' }}
                                                 ></i>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <i onClick={() => setUpdate(item)}
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#basicModal"
                                                     className="fa-solid fa-pen-to-square"
-                                                    style={{ cursor: "pointer" }}
+                                                    style={{ cursor: "pointer", color: 'blue' }}
                                                 ></i>
                                             </p>
                                         </td>

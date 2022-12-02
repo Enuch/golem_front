@@ -194,7 +194,7 @@ export const User = () => {
                             data-bs-toggle="modal"
                             data-bs-target="#basicModal"
                         >
-                            Novo Usuário
+                            Cadastrar Usuário
                         </button>
 
                         {/*Modal Create*/}
@@ -416,7 +416,7 @@ export const User = () => {
 
                 <div className="col-lg-4 col-md-6">
                     <div className="mt-3">
-                        {/*Modal Update*/}
+                        {/*Modal excluir*/}
                         <div
                             className="modal fade"
                             id="basicModalUp"
@@ -467,11 +467,12 @@ export const User = () => {
 
             {/* Lista */}
             <div className="card" style={{ marginBottom: "20px", marginTop: "20px" }}>
-                <h5 className="card-header">Materiais</h5>
+                <h5 className="card-header">Usuários</h5>
                 <div className="table-responsive text-nowrap">
-                    <table className="table table-borderless">
+                    <table className="table">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Login</th>
                                 <th>Nome</th>
                                 <th>Email</th>
@@ -485,6 +486,9 @@ export const User = () => {
                             {currentItens.map((item) => {
                                 return (
                                     <tr key={item.id.toString()}>
+                                        <td>
+                                            <i className="fa-solid fa-user"></i>
+                                        </td>
                                         <td>{item.username}</td>
                                         <td>{item.name}</td>
                                         <td>{item.email}</td>
@@ -499,7 +503,7 @@ export const User = () => {
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#basicModalUp"
                                                     className="fa-solid fa-trash"
-                                                    style={{ cursor: "pointer" }}
+                                                    style={{ cursor: "pointer", color: 'red' }}
                                                 ></i>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <i
@@ -507,7 +511,7 @@ export const User = () => {
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#basicModal"
                                                     className="fa-solid fa-pen-to-square"
-                                                    style={{ cursor: "pointer" }}
+                                                    style={{ cursor: "pointer", color: 'blue' }}
                                                 ></i>
                                             </p>
                                         </td>

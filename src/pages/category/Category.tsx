@@ -148,7 +148,7 @@ export const Category = () => {
                         data-bs-toggle="modal"
                         data-bs-target="#basicModal"
                     >
-                        Nova Categoria
+                        Cadastrar Categoria
                     </button>
 
                     {/*Modal Create*/}
@@ -223,7 +223,7 @@ export const Category = () => {
 
             <div className="col-lg-4 col-md-6">
                 <div className="mt-3">
-                    {/*Modal Update*/}
+                    {/*Modal excluir*/}
                     <div
                         className="modal fade"
                         id="basicModalUp"
@@ -273,11 +273,12 @@ export const Category = () => {
 
             {/* Lista */}
             <div className="card" style={{ marginBottom: "20px", marginTop: "20px" }}>
-                <h5 className="card-header">Materiais</h5>
+                <h5 className="card-header">Categorias</h5>
                 <div className="table-responsive text-nowrap">
-                    <table className="table table-borderless">
+                    <table className="table">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Nome</th>
                                 <th>ações</th>
                             </tr>
@@ -286,6 +287,9 @@ export const Category = () => {
                             {currentItens.map((item) => {
                                 return (
                                     <tr key={item.id.toString()}>
+                                        <td>
+                                            <i className="fa-solid fa-bookmark"></i>
+                                        </td>
                                         <td>{item.name}</td>
                                         <td>
                                             <p>
@@ -293,14 +297,14 @@ export const Category = () => {
                                                     className="fa-solid fa-trash"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#basicModalUp"
-                                                    style={{ cursor: "pointer" }}
+                                                    style={{ cursor: "pointer", color: 'red' }}
                                                 ></i>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <i onClick={() => setUpdate(item)}
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#basicModal"
                                                     className="fa-solid fa-pen-to-square"
-                                                    style={{ cursor: "pointer" }}
+                                                    style={{ cursor: "pointer", color: 'blue' }}
                                                 ></i>
                                             </p>
                                         </td>

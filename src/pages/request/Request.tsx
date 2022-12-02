@@ -4,8 +4,6 @@ import { ToastContainer } from "react-toastify";
 import { StatusBadge } from "../../components/status/StatusBadge";
 import { TRequest } from "../../types/TRequest";
 import { RequestController } from "./Request.controller";
-import format, { parseISO } from 'date-fns'
-import ptBR from "date-fns/esm/locale/pt-BR/index.js";
 import { formatDate } from "../../utils/utils";
 
 let previuosPage = 0;
@@ -19,8 +17,6 @@ export const Request = () => {
     useEffect(() => {
         controller.findAll(setRequests);
     }, [refresh]);
-
-    const data = formatDate
 
     // FILTRO
     const [filtro, setFiltro] = useState(0);
@@ -78,7 +74,7 @@ export const Request = () => {
                             data-bs-toggle="modal"
                             data-bs-target="#basicModal"
                         >
-                            Nova Requisição
+                            Cadastrar Requisição
                         </button>
                     </Link>
                 </div>
@@ -123,11 +119,9 @@ export const Request = () => {
                                         <div className="card-body">
                                             <div className="card-title d-flex align-items-start justify-content-between">
                                                 <div className="avatar flex-shrink-0">
-                                                    <img
-                                                        src="../static/assets/img/icons/unicons/chart-success.png"
-                                                        alt="chart success"
-                                                        className="rounded"
-                                                    />
+                                                    <span className="avatar-initial rounded badge bg-label-info">
+                                                        <i className="fa-solid fa-paper-plane"></i>
+                                                    </span>
                                                 </div>
                                                 <div className="dropdown">
                                                     <button
@@ -154,14 +148,14 @@ export const Request = () => {
                                                 <strong>
                                                     {request.material_request.length}
                                                 </strong>
-                                                {(request.material_request.length > 1) ? ' materiais requisitados.' : ' material requisitados.'}
+                                                {(request.material_request.length > 1) ? ' materiais requisitados.' : ' material requisitado.'}
                                             </span>
-                                            <h3 className="card-title mb-2">
+                                            <h4 className="card-title mb-2">
                                                 <strong>
-                                                    {formatDate(request.created_date.toString())}
+                                                    Solicitado em
                                                 </strong>{" "}
-                                                <span style={{ fontSize: "15px" }}>data.</span>
-                                            </h3>
+                                                <span style={{ fontSize: "15px" }}>{formatDate(request.created_date.toString())}</span>
+                                            </h4>
                                             <StatusBadge status={request.status} />
                                         </div>
                                     </div>

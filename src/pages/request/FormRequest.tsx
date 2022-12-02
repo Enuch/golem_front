@@ -24,7 +24,7 @@ export const FormRequest = () => {
 
     const formik = useFormik({
         initialValues: {
-            request: [{ material_id: 0, amount_requested: 0 }],
+            request: [{ material_id: 0, amount_requested: '' }],
         },
         onSubmit: async (values) => {
             const newValues = values.request
@@ -112,7 +112,6 @@ export const FormRequest = () => {
                         <div className="card mb-4">
                             <div className="card-header d-flex justify-content-between align-items-center">
                                 <h5 className="mb-0">Cadastrar Requisição</h5>
-                                <small className="text-muted float-end">Default label</small>
                             </div>
                             <div className="card-body">
                                 <FormikProvider value={formik}>
@@ -125,31 +124,33 @@ export const FormRequest = () => {
                                                     <div>
                                                         {formik.values.request.map((request, index) => (
                                                             <div key={index}>
-                                                                <label className="form-label" htmlFor="material_id">
-                                                                    Material
-                                                                </label>
-                                                                <Field
-                                                                    type="number"
-                                                                    as="select"
-                                                                    id="category_id"
-                                                                    name={`request[${index}].material_id`}
-                                                                    className="form-select"
-                                                                    aria-label="Default select example"
-                                                                >
-                                                                    <option value={0}>Selecione um material</option>
-                                                                    {materials.map((item) => {
-                                                                        return (
-                                                                            <option key={item.id} value={item.id}>
-                                                                                {item.name}
-                                                                            </option>
-                                                                        );
-                                                                    })}
-                                                                </Field>
+                                                                <div className="mb-3">
+                                                                    <label className="form-label" htmlFor="material_id">
+                                                                        Material
+                                                                    </label>
+                                                                    <Field
+                                                                        type="number"
+                                                                        as="select"
+                                                                        id="category_id"
+                                                                        name={`request[${index}].material_id`}
+                                                                        className="form-select"
+                                                                        aria-label="Default select example"
+                                                                    >
+                                                                        <option value={0}>Selecione um material</option>
+                                                                        {materials.map((item) => {
+                                                                            return (
+                                                                                <option key={item.id} value={item.id}>
+                                                                                    {item.name}
+                                                                                </option>
+                                                                            );
+                                                                        })}
+                                                                    </Field>
+                                                                </div>
                                                                 <label className="form-label" htmlFor="amount_requeted">
                                                                     Quantidade
                                                                 </label>
                                                                 <Field type="number" className="form-control" name={`request[${index}].amount_requested`} />
-
+                                                                <div className="mb-3"></div>
 
                                                                 {(formik.values.request.length === 1) ? null :
                                                                     <button
@@ -158,17 +159,17 @@ export const FormRequest = () => {
                                                                         type="button"
                                                                         onClick={() => arrayHelpers.remove(index)}
                                                                     >
-                                                                        Remover
+                                                                        Remover material
                                                                     </button>}
                                                                 <button
                                                                     style={{ margin: '10px' }}
                                                                     className="btn btn-primary"
                                                                     type="button"
                                                                     onClick={() =>
-                                                                        arrayHelpers.push({ material_id: 0, amount_requested: 0 })
+                                                                        arrayHelpers.push({ material_id: 0, amount_requested: '' })
                                                                     }
                                                                 >
-                                                                    Adicionar
+                                                                    Adicionar material
                                                                 </button>
                                                             </div>
                                                         ))}
@@ -179,7 +180,7 @@ export const FormRequest = () => {
 
                                         </div>
                                         <button type="submit" className="btn btn-primary">
-                                            Cadastrar
+                                            Cadastrar requisição
                                         </button>
                                     </form>
                                 </FormikProvider>

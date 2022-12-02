@@ -1,5 +1,6 @@
 import { useContext } from "react"
 import { Outlet } from "react-router-dom"
+import { Footer } from "../../components/footer/Footer"
 import { Menu } from "../../components/menu/Menu"
 import { MenuHorizontal } from "../../components/menu/MenuHorizontal"
 import { AuthContext } from "../../context/auth/AuthContext"
@@ -14,12 +15,11 @@ export const Home = () => {
                     <div className="layout-container">
                         <Menu />
                         <div className='layout-page'>
-                            <div className='container-xxl'>
-                                <MenuHorizontal />
-                                <br />
-                                <br />
+                            <MenuHorizontal />
+                            <div className='container-xxl flex-grow-1 container-p-y'>
                                 <Outlet />
                             </div>
+                            <Footer />
                         </div>
                     </div>
                 )
@@ -31,6 +31,7 @@ export const Home = () => {
                             <MenuHorizontal />
                             <Outlet />
                         </div>
+                        <Footer />
                     </div>
                 )}
 
