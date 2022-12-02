@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { TMaterial } from "../../types/TMaterial";
 import { CategoryController } from "../category/Category.controller";
 import { Filter } from "../../components/filter/Filter";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 let previuosPage = 0;
@@ -156,7 +156,6 @@ export const Material = () => {
 
     return (
         <>
-            <ToastContainer />
             {/*Titulo*/}
             <h4 className="fw-bold py-3 mb-4">
                 <span className="text-muted fw-light">Materiais /</span> Lista

@@ -4,7 +4,7 @@ import { TUser } from "../../types/TUser";
 import { UserController } from "./User.controller";
 import * as Yup from "yup";
 import { Filter } from "../../components/filter/Filter";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 let previuosPage = 0;
@@ -178,7 +178,6 @@ export const User = () => {
 
     return (
         <>
-            <ToastContainer />
             {/*Titulo*/}
             <h4 className="fw-bold py-3 mb-4">
                 <span className="text-muted fw-light">Usuários /</span> Lista

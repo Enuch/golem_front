@@ -1,5 +1,6 @@
 import { useContext } from "react"
 import { Outlet } from "react-router-dom"
+import { ToastContainer } from "react-toastify"
 import { Footer } from "../../components/footer/Footer"
 import { Menu } from "../../components/menu/Menu"
 import { MenuHorizontal } from "../../components/menu/MenuHorizontal"
@@ -15,6 +16,7 @@ export const Home = () => {
                     <div className="layout-container">
                         <Menu />
                         <div className='layout-page'>
+                            <ToastContainer />
                             <MenuHorizontal />
                             <div className='container-xxl flex-grow-1 container-p-y'>
                                 <Outlet />
@@ -26,12 +28,15 @@ export const Home = () => {
                 :
                 (
                     <div className="layout-container">
-                        <br /><br />
-                        <div className='container-xxl'>
-                            <MenuHorizontal />
-                            <Outlet />
+                        <div className='content-wrapper'>
+                            <div className='container-xxl flex-grow-1 container-p-y'>
+                                <ToastContainer />
+                                <MenuHorizontal />
+                                <br />
+                                <Outlet />
+                            </div>
+                            <Footer />
                         </div>
-                        <Footer />
                     </div>
                 )}
 

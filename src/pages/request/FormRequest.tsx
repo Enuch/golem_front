@@ -7,7 +7,7 @@ import { MaterialRequestController } from "./MaterialRequest.controller";
 import { TMaterialRequest } from "../../types/TMaterialRequest";
 import { AuthContext } from "../../context/auth/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const FormRequest = () => {
@@ -38,7 +38,7 @@ export const FormRequest = () => {
         controllerMaterial.findAll(setMaterials);
     }, []);
 
-    const validation = (data: any) => {
+    const validation = async (data: any) => {
         let errors = true;
         data.forEach((value: { material_id: { toString: () => string; }; amount_requested: number; }) => {
             validaMaterials.forEach(material => {
@@ -62,7 +62,7 @@ export const FormRequest = () => {
             })
         })
         if (!errors) {
-            createR(data)
+            await createR(data)
             navigate('/request')
         }
 
@@ -100,7 +100,6 @@ export const FormRequest = () => {
 
     return (
         <>
-            <ToastContainer />
             <div className="container-xxl flex-grow-1 container-p-y">
                 <h4 className="fw-bold py-3 mb-4">
                     <span className="text-muted fw-light">Requisições /</span> Formulário

@@ -7,7 +7,7 @@ import { formatDate } from "../../utils/utils";
 import { MaterialController } from "../material/Material.controller";
 import { MaterialRequestController } from "./MaterialRequest.controller";
 import { RequestController } from "./Request.controller";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const Details = () => {
@@ -62,12 +62,11 @@ export const Details = () => {
             progress: undefined,
             theme: "light",
         });
-
-        navigate(`/request`);
+        nav()
     };
 
     const cancelRequest = async () => {
-        controller.update(id_request, { status: 3 });
+        await controller.update(id_request, { status: 3 });
         toast.success(`Requisição Cancelada!`, {
             position: "top-center",
             autoClose: 5000,
@@ -78,13 +77,15 @@ export const Details = () => {
             progress: undefined,
             theme: "light",
         });
-        navigate(`/request`);
+        nav()
     };
+
+    const nav = () => {
+        navigate(`/request`);
+    }
 
     return (
         <>
-            <ToastContainer />
-
             {/*Titulo*/}
             <h4 className="fw-bold py-3 mb-4">
                 <span className="text-muted fw-light">Requisições /</span> Detalhes

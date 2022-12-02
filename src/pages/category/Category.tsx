@@ -4,7 +4,7 @@ import { TCategory } from "../../types/TCategory";
 import { CategoryController } from "./Category.controller";
 import * as Yup from 'yup'
 import { Filter } from "../../components/filter/Filter";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 let previuosPage = 0
@@ -132,8 +132,6 @@ export const Category = () => {
 
     return (
         <>
-            <ToastContainer />
-
             {/*Titulo*/}
             <h4 className="fw-bold py-3 mb-4">
                 <span className="text-muted fw-light">Categorias /</span> Lista

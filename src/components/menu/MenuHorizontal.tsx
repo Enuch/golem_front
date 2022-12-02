@@ -20,11 +20,7 @@ export const MenuHorizontal = () => {
             </div>
 
             <div className="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-                <span>
-                    <i className="fa-solid fa-circle-exclamation">
-                    </i>{' '}
-                    4 Novas Requisições
-                </span>
+
                 {(auth.user?.role !== 3) ?
                     (
                         null
@@ -32,19 +28,25 @@ export const MenuHorizontal = () => {
                     (
                         <div className="navbar-nav align-items-center">
                             <div style={{ padding: '5px' }}>
-                                <Link to={`/`}>
+                                <Link className="badge bg-primary" to={`/dashboard`}>
                                     Home
                                 </Link>
                             </div>
 
                             <div style={{ padding: '5px' }}>
-                                <Link to={`/request`}>
+                                <Link className="badge bg-primary" to={`/request`}>
                                     Requisições
                                 </Link>
                             </div>
 
                         </div>
                     )}
+                &nbsp;&nbsp;&nbsp;
+                <span>
+                    <i className="fa-solid fa-circle-exclamation">
+                    </i>{' '}
+                    4 Novas Requisições
+                </span>
 
                 <ul className="navbar-nav flex-row align-items-center ms-auto">
                     {/* <!-- Place this tag where you want the button to render. --> */}
