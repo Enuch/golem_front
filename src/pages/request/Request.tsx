@@ -141,6 +141,9 @@ export const Request = () => {
                                                         <Link className="dropdown-item" to={`/details/${request.id}`}>
                                                             Detalhes
                                                         </Link>
+                                                        <Link className="dropdown-item" to={`/form-request/${request.id}`}>
+                                                            Editar
+                                                        </Link>
                                                     </div>
                                                 </div>
                                             </div>

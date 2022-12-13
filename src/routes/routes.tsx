@@ -46,6 +46,10 @@ export const router = createBrowserRouter([
         element: <FormRequest />,
       },
       {
+        path: "/form-request/:id",
+        element: <FormRequest />,
+      },
+      {
         path: "/Details/:id",
         element: <Details />,
       },

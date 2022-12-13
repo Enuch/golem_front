@@ -33,7 +33,7 @@ export const Details = () => {
         material_amount: number
     ) => {
         setFields({ ...fields, [event.target.name]: event.target.value });
-        setIds({ ...ids, [material_id]: material_amount - event.target.value });
+        setIds({ ...ids, [material_id]: material_amount + event.target.value });
     };
 
     const aceptRequest = async (event: any) => {
@@ -43,12 +43,6 @@ export const Details = () => {
         for (const key in fields) {
             await materialRequestController.update(Number.parseInt(key), {
                 amount_received: Number.parseInt(fields[key]),
-            });
-        }
-
-        for (const key in ids) {
-            await materialController.update(Number.parseInt(key), {
-                amount: Number.parseInt(ids[key]),
             });
         }
 
@@ -67,6 +61,14 @@ export const Details = () => {
 
     const cancelRequest = async () => {
         await controller.update(id_request, { status: 3 });
+
+        for (const key in ids) {
+            materialController.update(Number.parseInt(key), {
+                amount: Number.parseInt(ids[key]),
+            });
+            console.log(ids[key])
+        }
+
         toast.success(`Requisição Cancelada!`, {
             position: "top-center",
             autoClose: 5000,
@@ -104,42 +106,43 @@ export const Details = () => {
                             {request?.status! > 1 ? (
                                 <div></div>
                             ) : (
-                                <div className="dropdown">
-                                    <button
-                                        className="btn p-0"
-                                        type="button"
-                                        id="orederStatistics"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                    >
-                                        <i className="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div
-                                        className="dropdown-menu dropdown-menu-end"
-                                        aria-labelledby="orederStatistics"
-                                    >
-                                        {/* <a className="dropdown-item" href="">
-                                            Deletar
-                                        </a>
-                                        <a
-                                            onClick={() =>
-                                                handleSetRequest(
-                                                    request?.material_request[0].id!,
-                                                    request?.material_request[0].material.id!,
-                                                    request?.material_request[0].amount!,
-                                                    request?.origin!
-                                                )
-                                            }
-                                            className="dropdown-item"
-                                            href=""
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#basicModal"
-                                        >
-                                            Editar
-                                        </a> */}
-                                    </div>
-                                </div>
+                                // <div className="dropdown">
+                                //     <button
+                                //         className="btn p-0"
+                                //         type="button"
+                                //         id="orederStatistics"
+                                //         data-bs-toggle="dropdown"
+                                //         aria-haspopup="true"
+                                //         aria-expanded="false"
+                                //     >
+                                //         <i className="bx bx-dots-vertical-rounded"></i>
+                                //     </button>
+                                //     <div
+                                //         className="dropdown-menu dropdown-menu-end"
+                                //         aria-labelledby="orederStatistics"
+                                //     >
+                                //         {/* <a className="dropdown-item" href="">
+                                //             Deletar
+                                //         </a>
+                                //         <a
+                                //             onClick={() =>
+                                //                 handleSetRequest(
+                                //                     request?.material_request[0].id!,
+                                //                     request?.material_request[0].material.id!,
+                                //                     request?.material_request[0].amount!,
+                                //                     request?.origin!
+                                //                 )
+                                //             }
+                                //             className="dropdown-item"
+                                //             href=""
+                                //             data-bs-toggle="modal"
+                                //             data-bs-target="#basicModal"
+                                //         >
+                                //             Editar
+                                //         </a> */}
+                                //     </div>
+                                // </div>
+                                <div></div>
                             )}
                         </div>
                         <div className="card-body">

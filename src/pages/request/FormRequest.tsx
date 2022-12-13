@@ -6,14 +6,22 @@ import { MaterialController } from "../material/Material.controller";
 import { MaterialRequestController } from "./MaterialRequest.controller";
 import { TMaterialRequest } from "../../types/TMaterialRequest";
 import { AuthContext } from "../../context/auth/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { TRequest } from "../../types/TRequest";
+
+type auxRequest = {
+    material_id: number;
+    amount_requested: number;
+}
 
 export const FormRequest = () => {
     const auth = useContext(AuthContext);
     const obj = { requested_user_id: auth.user?.id }
     const navigate = useNavigate();
+    const { id } = useParams();
+    const id_request = Number.parseInt(id!);
 
     const controller = RequestController();
     const controllerMaterialRequest = MaterialRequestController();
@@ -21,11 +29,31 @@ export const FormRequest = () => {
 
     const [materials, setMaterials] = useState<TMaterial[]>([]);
     const [validaMaterials, setValidaMaterials] = useState<TMaterial[]>([]);
+    const [requestAux, setRequestAux] = useState<TRequest>()
+    let request: TRequest | auxRequest[] = [{ material_id: 0, amount_requested: 0 }];
+
+    const updateOrCreate = async () => {
+        if (id_request) {
+            await controller.findOne(id_request, setRequestAux)
+            request = requestAux!?.material_request.map(mr => ({
+                material_id: mr.material_id,
+                amount_requested: mr.amount_requested,
+            }))
+            console.log(request)
+        }
+    }
+
+    useEffect(() => {
+        controllerMaterial.findAll(setMaterials);
+        updateOrCreate();
+
+    }, []);
 
     const formik = useFormik({
         initialValues: {
-            request: [{ material_id: 0, amount_requested: '' }],
+            request,
         },
+        enableReinitialize: true,
         onSubmit: async (values) => {
             const newValues = values.request
             await controllerMaterial.findAll(setValidaMaterials)
@@ -33,10 +61,6 @@ export const FormRequest = () => {
         },
     });
 
-
-    useEffect(() => {
-        controllerMaterial.findAll(setMaterials);
-    }, []);
 
     const validation = async (data: any) => {
         let errors = true;
@@ -85,6 +109,22 @@ export const FormRequest = () => {
 
             }))
         })
+
+        data_MR.forEach(async data => {
+            validaMaterials.forEach(async material => {
+                if (Number.parseInt(data.material_id.toString()) === material.id) {
+                    await controllerMaterial.update(material.id, { amount: material.amount - data.amount_requested })
+                    console.log(material.amount - data.amount_requested)
+                }
+            })
+        })
+
+        // for (const key of data_MR) {
+        //     await controllerMaterial.update(key.material_id, {
+        //         amount: key.amount_requested,
+        //     });
+        // }
+
         await controllerMaterialRequest.createMany(newData);
         toast.success(`Requisição cadastrada!`, {
             position: "top-center",
@@ -132,6 +172,7 @@ export const FormRequest = () => {
                                                                         as="select"
                                                                         id="category_id"
                                                                         name={`request[${index}].material_id`}
+                                                                        value={request.material_id}
                                                                         className="form-select"
                                                                         aria-label="Default select example"
                                                                     >
@@ -148,7 +189,7 @@ export const FormRequest = () => {
                                                                 <label className="form-label" htmlFor="amount_requeted">
                                                                     Quantidade
                                                                 </label>
-                                                                <Field type="number" className="form-control" name={`request[${index}].amount_requested`} />
+                                                                <Field type="number" className="form-control" name={`request[${index}].amount_requested`} value={request.amount_requested} />
                                                                 <div className="mb-3"></div>
 
                                                                 {(formik.values.request.length === 1) ? null :
