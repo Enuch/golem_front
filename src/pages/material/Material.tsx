@@ -1,99 +1,23 @@
-import { useFormik, Field, FormikProvider } from "formik";
 import { useEffect, useState } from "react";
-import { TCategory } from "../../types/TCategory";
 import { MaterialController } from "./Material.controller";
-import * as Yup from "yup";
 import { TMaterial } from "../../types/TMaterial";
-import { CategoryController } from "../category/Category.controller";
 import { Filter } from "../../components/filter/Filter";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
 
 let previuosPage = 0;
-let update = false
 
 export const Material = () => {
     const controller = MaterialController();
-    const controllerCategory = CategoryController();
     const [formValues, setFormValue] = useState<TMaterial>()
-    const [initialValues, setInitialValues] = useState({
-        name: "",
-        origin: "",
-        amount: "",
-        category_id: 0,
-        id: 0,
-    })
-    const formik = useFormik({
-        initialValues: formValues || initialValues,
-        validationSchema: Yup.object({
-            name: Yup.string().required("Obrigatório!"),
-            origin: Yup.string().required("Obrigatório!"),
-            amount: Yup.number().required("Obrigatório!"),
-            category_id: Yup.number().min(1).moreThan(0, 'Obrigatório!').required("Obrigatório!"),
-        }),
-        enableReinitialize: true,
-        onSubmit: (values) => {
-            values.category_id = Number.parseInt(values.category_id.toString());
-
-            if (update === true) {
-                updateM(values.id, values as TMaterial)
-            } else {
-                createM(values);
-            }
-            update = false
-            setFormValue(undefined)
-        },
-    });
 
     const [materials, setMaterials] = useState<TMaterial[]>([]);
-    const [categories, setCategories] = useState<TCategory[]>([]);
     const [refresh, setRefresh] = useState<number>(0);
 
     useEffect(() => {
         controller.findAll(setMaterials);
-        controllerCategory.findAll(setCategories);
     }, [refresh]);
-
-    const createM = async (data: Object) => {
-        await controller.create(data);
-        toast.success("Material cadastrado!", {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-        });
-        setRefresh(refresh + 1);
-    };
-
-    const setUpdate = async (data: TMaterial) => {
-        update = true;
-        setFormValue(data)
-    };
-
-    const updateM = async (id: number, data: TMaterial) => {
-        console.log(data)
-        await controller.update(id, {
-            name: data.name,
-            origin: data.origin,
-            amount: data.amount,
-            category_id: data.category_id,
-        });
-        toast.success("Material atualizado!", {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-        });
-        setRefresh(refresh + 1);
-    };
 
     const deleteM = async (event: any) => {
         event.preventDefault();
@@ -110,11 +34,6 @@ export const Material = () => {
         });
         setRefresh(refresh + 1);
     };
-
-    const cancelForm = () => {
-        update = false;
-        setFormValue(undefined)
-    }
 
     // FILTRO
     const [filtro, setFiltro] = useState("");
@@ -161,216 +80,66 @@ export const Material = () => {
                 <span className="text-muted fw-light">Materiais /</span> Lista
             </h4>
 
-            <FormikProvider value={formik}>
-                {/*Botão Modal*/}
-                <div className="col-lg-4 col-md-6">
-                    <div className="mt-3">
+            {/*Cadastrar material*/}
+            <div className="col-lg-4 col-md-6">
+                <div className="mt-3">
+                    <Link to={`/material-form`}>
                         <button
                             type="button"
                             className="btn btn-primary"
-                            data-bs-toggle="modal"
-                            data-bs-target="#basicModal"
                         >
                             Cadastrar Material
                         </button>
+                    </Link>
+                </div>
+            </div>
 
-                        {/*Modal Create*/}
-                        <div
-                            className="modal fade"
-                            id="basicModal"
-                            tabIndex={-1}
-                            aria-hidden="true"
-                        >
-                            <div className="modal-dialog" role="document">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel1">
-                                            Cadastrar Material
-                                        </h5>
+            <div className="col-lg-4 col-md-6">
+                <div className="mt-3">
+                    {/*Modal excluir*/}
+                    <div
+                        className="modal fade"
+                        id="basicModalUp"
+                        tabIndex={-1}
+                        aria-hidden="true"
+                    >
+                        <div className="modal-dialog" role="document">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalLabel1">
+                                        Deseja excluir?
+                                    </h5>
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"
+                                    ></button>
+                                </div>
+                                <form onSubmit={deleteM}>
+                                    <div className="modal-footer">
                                         <button
                                             type="button"
-                                            className="btn-close"
+                                            className="btn btn-outline-secondary"
+                                            data-bs-dismiss="modal"
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button
                                             data-bs-dismiss="modal"
                                             aria-label="Close"
-                                            onClick={cancelForm}
-                                        ></button>
+                                            type="submit"
+                                            className="btn btn-primary"
+                                        >
+                                            Sim
+                                        </button>
                                     </div>
-                                    <form onSubmit={formik.handleSubmit}>
-                                        <div className="modal-body">
-                                            <div className="row">
-                                                <div className="col mb-3">
-                                                    <label htmlFor="name" className="form-label">
-                                                        Nome
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        id="name"
-                                                        name="name"
-                                                        aria-describedby="defaultFormControlHelp"
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.name}
-                                                        required
-                                                    />
-                                                    {formik.touched.name && formik.errors.name ? (
-                                                        <div style={{ color: 'red', fontWeight: 'bolder' }}>{formik.errors.name}</div>
-                                                    ) : null}
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col mb-3">
-                                                    <label htmlFor="origin" className="form-label">
-                                                        Origin
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        id="origin"
-                                                        name="origin"
-                                                        aria-describedby="defaultFormControlHelp"
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.origin}
-                                                        required
-                                                    />
-                                                    {formik.touched.origin && formik.errors.origin ? (
-                                                        <div style={{ color: 'red', fontWeight: 'bolder' }}>{formik.errors.origin}</div>
-                                                    ) : null}
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col mb-3">
-                                                    <label htmlFor="amount" className="form-label">
-                                                        Quantidade
-                                                    </label>
-                                                    <input
-                                                        type="number"
-                                                        className="form-control"
-                                                        id="amount"
-                                                        name="amount"
-                                                        aria-describedby="defaultFormControlHelp"
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.amount}
-                                                        required
-                                                    />
-                                                    {formik.touched.amount && formik.errors.amount ? (
-                                                        <div style={{ color: 'red', fontWeight: 'bolder' }}>{formik.errors.amount}</div>
-                                                    ) : null}
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col mb-3">
-                                                    <label htmlFor="category_id" className="form-label">
-                                                        Categoria
-                                                    </label>
-                                                    <Field
-                                                        type="number"
-                                                        as="select"
-                                                        id="category_id"
-                                                        name="category_id"
-                                                        className="form-select"
-                                                        aria-label="Default select example"
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.category_id}
-                                                        required
-                                                    >
-                                                        <option value={0}>Selecione uma categoria</option>
-                                                        {categories.map((category) => {
-                                                            return (
-                                                                <option key={category.id} value={category.id}>
-                                                                    {category.name}
-                                                                </option>
-                                                            );
-                                                        })}
-                                                        {formik.touched.category_id && formik.errors.category_id ? (
-                                                            <div style={{ color: 'red', fontWeight: 'bolder' }}>{formik.errors.category_id}</div>
-                                                        ) : null}
-                                                    </Field>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="modal-footer">
-                                            <button
-                                                onClick={cancelForm}
-                                                type="button"
-                                                className="btn btn-outline-secondary"
-                                                data-bs-dismiss="modal"
-                                            >
-                                                Cancelar
-                                            </button>
-                                            <button
-                                                data-bs-dismiss={
-                                                    formik.errors.amount ||
-                                                        formik.errors.origin ||
-                                                        formik.errors.category_id ||
-                                                        formik.errors.name
-                                                        ? null
-                                                        : "modal"
-                                                }
-                                                aria-label="Close"
-                                                type="submit"
-                                                className="btn btn-primary"
-                                            >
-                                                Adicionar
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div className="col-lg-4 col-md-6">
-                    <div className="mt-3">
-                        {/*Modal excluir*/}
-                        <div
-                            className="modal fade"
-                            id="basicModalUp"
-                            tabIndex={-1}
-                            aria-hidden="true"
-                        >
-                            <div className="modal-dialog" role="document">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel1">
-                                            Deseja excluir?
-                                        </h5>
-                                        <button
-                                            type="button"
-                                            className="btn-close"
-                                            data-bs-dismiss="modal"
-                                            aria-label="Close"
-                                        ></button>
-                                    </div>
-                                    <form onSubmit={deleteM}>
-                                        <div className="modal-footer">
-                                            <button
-                                                type="button"
-                                                className="btn btn-outline-secondary"
-                                                data-bs-dismiss="modal"
-                                            >
-                                                Cancelar
-                                            </button>
-                                            <button
-                                                data-bs-dismiss="modal"
-                                                aria-label="Close"
-                                                type="submit"
-                                                className="btn btn-primary"
-                                            >
-                                                Sim
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </FormikProvider>
+            </div>
 
             {/* Busca */}
             <Filter filtro={filtro} fun={setFiltro} />
@@ -411,12 +180,14 @@ export const Material = () => {
                                                     style={{ cursor: "pointer", color: 'red' }}
                                                 ></i>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <i onClick={() => setUpdate(item)}
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#basicModal"
-                                                    className="fa-solid fa-pen-to-square"
-                                                    style={{ cursor: "pointer", color: 'blue' }}
-                                                ></i>
+                                                <Link to={`material-form`}>
+                                                    <i
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#basicModal"
+                                                        className="fa-solid fa-pen-to-square"
+                                                        style={{ cursor: "pointer", color: 'blue' }}
+                                                    ></i>
+                                                </Link>
                                             </p>
                                         </td>
                                     </tr>

@@ -2,6 +2,8 @@ import { useFormik } from "formik";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth/AuthContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Login = () => {
     const auth = useContext(AuthContext);
@@ -12,14 +14,34 @@ export const Login = () => {
             username: '',
             password: '',
         },
-        onSubmit: (values) => {
-            auth.signin(values.username, values.password);
-            nav(`/dashboard`)
+        onSubmit: async (values) => {
+            let authenticate: Boolean = false;
+            try {
+                authenticate = await auth.signin(values.username, values.password);
+            } catch (error) {
+                console.log(error)
+            }
+
+            if (authenticate)
+                nav(`/dashboard`)
+            else
+                toast.info("Usuario ou senha estão incorretos!", {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+
         }
     });
 
     return (
         <div className="container-xxl">
+            <ToastContainer />
             <div className="authentication-wrapper authentication-basic container-p-y">
                 <div className="authentication-inner">
                     {/* <!-- Register --> */}

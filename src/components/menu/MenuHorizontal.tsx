@@ -43,9 +43,7 @@ export const MenuHorizontal = () => {
                     )}
                 &nbsp;&nbsp;&nbsp;
                 <span>
-                    <i className="fa-solid fa-circle-exclamation">
-                    </i>{' '}
-                    4 Novas Requisições
+
                 </span>
 
                 <ul className="navbar-nav flex-row align-items-center ms-auto">
