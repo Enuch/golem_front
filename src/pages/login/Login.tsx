@@ -110,19 +110,6 @@ export const Login = () => {
                                     </div>
                                 </div>
                                 <div className="mb-3">
-                                    <div className="form-check">
-                                        <input
-                                            className="form-check-input"
-                                            type="checkbox"
-                                            id="remember-me"
-                                        />
-                                        <label className="form-check-label" htmlFor="remember-me">
-                                            {" "}
-                                            Lembre-me{" "}
-                                        </label>
-                                    </div>
-                                </div>
-                                <div className="mb-3">
                                     <button
                                         className="btn btn-primary d-grid w-100"
                                         type="submit"

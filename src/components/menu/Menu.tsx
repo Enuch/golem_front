@@ -27,7 +27,7 @@ export const Menu = () => {
                         className="menu-link"
                     >
                         <i className="menu-icon tf-icons bx bx-home-circle"></i>
-                        <div data-i18n="Analytics">Home</div>
+                        <div data-i18n="Analytics">Inicio</div>
                     </Link>
                 </li>
 

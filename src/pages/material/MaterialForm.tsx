@@ -95,13 +95,13 @@ export const MaterialForm = () => {
         <>
             <div className="container-xxl flex-grow-1 container-p-y">
                 <h4 className="fw-bold py-3 mb-4">
-                    <span className="text-muted fw-light">Categoria /</span> Formulário
+                    <span className="text-muted fw-light">Material /</span> Formulário
                 </h4>
                 <div className="row">
                     <div className="col-xl">
                         <div className="card mb-4">
                             <div className="card-header d-flex justify-content-between align-items-center">
-                                <h5 className="mb-0">Cadastrar Categoria</h5>
+                                <h5 className="mb-0">Cadastrar Material</h5>
                             </div>
                             <div className="card-body">
                                 <FormikProvider value={formik}>
@@ -205,7 +205,7 @@ export const MaterialForm = () => {
                                             </div>
                                         </div>
                                         <button type="submit" className="btn btn-primary">
-                                            Cadastrar Categoria
+                                            Cadastrar Material
                                         </button>
                                     </form>
                                 </FormikProvider>
